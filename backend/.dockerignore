@@ -1,0 +1,4 @@
+*.exe
+data/codeflash.db
+codeflash
+.DS_Store

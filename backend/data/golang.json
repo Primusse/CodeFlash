@@ -1,0 +1,588 @@
+[
+  {
+    "id": "go-001",
+    "subcategory": "基础语法",
+    "type": "choice",
+    "difficulty": "easy",
+    "question": "Go 语言中，以下哪个是导出（公开）的标识符？",
+    "options": "[\"myFunc\", \"MyFunc\", \"_myFunc\", \"my_func\"]",
+    "answer": "MyFunc",
+    "explanation": "Go 通过首字母大小写决定可见性：大写字母开头的是导出的（public），小写字母开头的是未导出的（package-private）。_ 开头的也是未导出的。"
+  },
+  {
+    "id": "go-002",
+    "subcategory": "基础语法",
+    "type": "choice",
+    "difficulty": "easy",
+    "question": "以下哪种声明变量的方式在 Go 中是无效的？",
+    "options": "[\"var x int = 10\", \"x := 10\", \"var x = 10\", \"int x = 10\"]",
+    "answer": "int x = 10",
+    "explanation": "Go 的变量声明方式：var x int = 10, var x = 10, x := 10（短变量声明，仅函数内）。int x = 10 是 C/Java 语法，Go 中类型在变量名之后。"
+  },
+  {
+    "id": "go-003",
+    "subcategory": "基础语法",
+    "type": "fill",
+    "difficulty": "easy",
+    "question": "Go 语言中，关键字 ____ 用于实现其他语言中 while 循环的效果。",
+    "answer": "for",
+    "explanation": "Go 只有 for 一种循环关键字，没有 while 和 do-while。for { } 相当于 while(true)，for condition { } 相当于 while(condition)。"
+  },
+  {
+    "id": "go-004",
+    "subcategory": "基础语法",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "关于 Go 中的 defer，以下说法错误的是？",
+    "options": "[\"defer 在函数返回前执行\", \"多个 defer 按 LIFO 顺序执行\", \"defer 可以修改命名返回值的值\", \"defer 语句中的参数在 defer 执行时才求值\"]",
+    "answer": "defer 语句中的参数在 defer 执行时才求值",
+    "explanation": "defer 语句中的参数在 defer 声明时就已求值（而非执行时）。例如 defer fmt.Println(i) 中 i 的值在 defer 声明时就确定了。但闭包方式 defer func() { fmt.Println(i) }() 中的 i 在执行时才读取。"
+  },
+  {
+    "id": "go-005",
+    "subcategory": "基础语法",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "Go 中，new 和 make 的区别是？",
+    "options": "[\"new 分配零值内存返回指针，make 只用于 slice/map/chan 初始化\", \"new 和 make 完全相同\", \"new 用于引用类型，make 用于值类型\", \"make 返回指针，new 返回值\"]",
+    "answer": "new 分配零值内存返回指针，make 只用于 slice/map/chan 初始化",
+    "explanation": "new(T) 分配 T 的零值内存，返回 *T。make 只用于 slice、map、channel 三种类型，初始化内部数据结构，返回 T（非指针）。var 声明的 map 是 nil，不能直接使用；make 创建的 map 已初始化。"
+  },
+  {
+    "id": "go-006",
+    "subcategory": "并发 (Goroutine)",
+    "type": "choice",
+    "difficulty": "easy",
+    "question": "在 Go 中启动一个 goroutine 的关键字是？",
+    "options": "[\"go\", \"async\", \"goroutine\", \"thread\"]",
+    "answer": "go",
+    "explanation": "使用 go 关键字即可启动 goroutine：go funcName()。goroutine 是轻量级线程，由 Go 运行时管理，初始栈仅 2KB，可以创建成千上万个。"
+  },
+  {
+    "id": "go-007",
+    "subcategory": "并发 (Goroutine)",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "以下关于 channel 的操作，哪项会引发 panic？",
+    "options": "[\"向已关闭的 channel 发送数据\", \"从已关闭的 channel 接收数据\", \"向 nil channel 发送数据（永久阻塞）\", \"关闭一个 nil channel\"]",
+    "answer": "向已关闭的 channel 发送数据",
+    "explanation": "向已关闭 channel 发送 → panic；从已关闭 channel 接收 → 返回零值+false；向 nil channel 发送/接收 → 永久阻塞；关闭 nil channel → panic；重复关闭 → panic。"
+  },
+  {
+    "id": "go-008",
+    "subcategory": "并发 (Goroutine)",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "以下哪种方式可以安全地等待多个 goroutine 完成？",
+    "options": "[\"time.Sleep\", \"sync.WaitGroup\", \"sync.Mutex\", \"channel 缓冲区\"]",
+    "answer": "sync.WaitGroup",
+    "explanation": "sync.WaitGroup 是等待 goroutine 完成的标准方式：Add(1) → defer Done() → Wait()。time.Sleep 不可靠，无法确定 goroutine 是否真正完成。"
+  },
+  {
+    "id": "go-009",
+    "subcategory": "并发 (Goroutine)",
+    "type": "choice",
+    "difficulty": "hard",
+    "question": "以下关于 Go 的 GMP 调度模型，描述正确的是？",
+    "options": "[\"G=Goroutine, M=Machine(OS线程), P=Processor(逻辑处理器)\", \"G=Garbage, M=Memory, P=Process\", \"G=Goroutine, M=Memory, P=Pool\", \"GMP 是指 GC Mark Phase\"]",
+    "answer": "G=Goroutine, M=Machine(OS线程), P=Processor(逻辑处理器)",
+    "explanation": "GMP 模型：G（Goroutine）是协程，M（Machine）是 OS 线程，P（Processor）是逻辑处理器（调度上下文）。P 的数量由 GOMAXPROCS 决定，默认为 CPU 核数。M 必须绑定 P 才能执行 G。"
+  },
+  {
+    "id": "go-010",
+    "subcategory": "并发 (Goroutine)",
+    "type": "fill",
+    "difficulty": "hard",
+    "question": "Go 中，使用 ____ 包可以实现多个 goroutine 之间通信的首选方式，体现了 '不要通过共享内存来通信，而应通过通信来共享内存' 的理念。",
+    "answer": "channel",
+    "explanation": "Go 的并发哲学：'Don't communicate by sharing memory; share memory by communicating.' Channel 是 Go 中 goroutine 间通信的首选机制，实现 CSP（Communicating Sequential Processes）模型。"
+  },
+  {
+    "id": "go-011",
+    "subcategory": "接口",
+    "type": "choice",
+    "difficulty": "easy",
+    "question": "Go 中接口的实现方式是？",
+    "options": "[\"显式声明 implements 关键字\", \"鸭子类型（Duck Typing）：只要实现了接口的所有方法就视为实现了该接口\", \"通过继承实现\", \"通过注解标记\"]",
+    "answer": "鸭子类型（Duck Typing）：只要实现了接口的所有方法就视为实现了该接口",
+    "explanation": "Go 使用结构类型（Structural Typing）：类型只要实现了接口的所有方法，就隐式地实现了该接口，无需显式声明。这降低了代码耦合度。Go 的 interface{} / any 是所有类型的接口。"
+  },
+  {
+    "id": "go-012",
+    "subcategory": "接口",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "Go 中，空接口 interface{} (或 any) 可以表示任何类型，它的底层结构包含哪两部分？",
+    "options": "[\"类型指针和数据指针\", \"只有数据指针\", \"方法表和类型信息\", \"值和错误\"]",
+    "answer": "类型指针和数据指针",
+    "explanation": "Go 接口底层结构（iface/eface）包含两个指针：类型信息指针（dynamic type）和数据指针（dynamic value）。类型断言和类型转换基于类型指针进行。"
+  },
+  {
+    "id": "go-013",
+    "subcategory": "接口",
+    "type": "choice",
+    "difficulty": "hard",
+    "question": "以下代码输出什么？var a interface{} = (*int)(nil); fmt.Println(a == nil)",
+    "options": "[\"true\", \"false\", \"编译错误\", \"运行时 panic\"]",
+    "answer": "false",
+    "explanation": "接口的 nil 判断需要同时满足：类型指针为 nil 且数据指针为 nil。这里类型是 *int（非 nil），数据是 nil，所以 a != nil。只有 var a interface{} 完全不赋值时才是 nil 接口。"
+  },
+  {
+    "id": "go-014",
+    "subcategory": "内存管理",
+    "type": "choice",
+    "difficulty": "easy",
+    "question": "Go 的垃圾回收器（GC）使用什么算法？",
+    "options": "[\"引用计数\", \"标记-清除（三色标记法）\", \"分代收集\", \"复制算法\"]",
+    "answer": "标记-清除（三色标记法）",
+    "explanation": "Go 使用并发三色标记-清除算法（Tri-color Mark and Sweep），与应用程序并发执行，减少 STW 时间。从 Go 1.5 起实现了并发 GC，STW 通常在微秒级别。"
+  },
+  {
+    "id": "go-015",
+    "subcategory": "内存管理",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "Go 中，逃逸分析 (Escape Analysis) 的作用是？",
+    "options": "[\"决定变量分配在栈还是堆上\", \"检测内存泄漏\", \"优化 CPU 缓存\", \"减少垃圾回收次数\"]",
+    "answer": "决定变量分配在栈还是堆上",
+    "explanation": "逃逸分析在编译期决定变量分配到栈还是堆。如果变量在函数返回后仍被引用（逃逸），则分配在堆上；否则分配在栈上（函数返回自动回收）。可通过 go build -gcflags='-m' 查看逃逸分析结果。"
+  },
+  {
+    "id": "go-016",
+    "subcategory": "内存管理",
+    "type": "fill",
+    "difficulty": "medium",
+    "question": "Go 中，使用 ____ 标准库可以分析程序的 CPU、内存、goroutine 等性能指标。",
+    "answer": "pprof",
+    "explanation": "net/http/pprof 包提供性能分析功能，导入后自动注册路由：/debug/pprof/。可分析 CPU profile、heap profile、goroutine 数量、block profile 等。"
+  },
+  {
+    "id": "go-017",
+    "subcategory": "标准库",
+    "type": "choice",
+    "difficulty": "easy",
+    "question": "Go 中，读取 JSON 数据的标准库是？",
+    "options": "[\"encoding/json\", \"io/json\", \"fmt/json\", \"net/json\"]",
+    "answer": "encoding/json",
+    "explanation": "encoding/json 提供 json.Marshal（序列化）和 json.Unmarshal（反序列化）。结构体标签 `json:\"field_name\"` 用于自定义 JSON 字段名。"
+  },
+  {
+    "id": "go-018",
+    "subcategory": "标准库",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "Go 中，context.Context 的主要作用不包括？",
+    "options": "[\"传递请求作用域的值\", \"超时控制\", \"取消信号传播\", \"数据库连接池管理\"]",
+    "answer": "数据库连接池管理",
+    "explanation": "context.Context 用于：传递取消信号（WithCancel）、超时控制（WithTimeout/WithDeadline）、传递请求级别的值（WithValue）。不包括连接池管理，那是 database/sql 的职责。"
+  },
+  {
+    "id": "go-019",
+    "subcategory": "标准库",
+    "type": "fill",
+    "difficulty": "medium",
+    "question": "Go 中，使用 ____ 关键字可以在编译时 import 一个包但不直接使用它，只为执行其 init() 函数。",
+    "answer": "_",
+    "explanation": "使用 import _ \"package\" 的方式匿名导入包，只执行其 init() 函数（如注册驱动：import _ \"github.com/go-sql-driver/mysql\"）。init() 在 main() 之前自动执行。"
+  },
+  {
+    "id": "go-020",
+    "subcategory": "错误处理",
+    "type": "choice",
+    "difficulty": "easy",
+    "question": "Go 中错误的处理习惯是？",
+    "options": "[\"使用 try-catch-finally\", \"函数返回 error，调用方检查\", \"使用异常抛出\", \"使用全局错误码\"]",
+    "answer": "函数返回 error，调用方检查",
+    "explanation": "Go 没有 try-catch，采用显式错误返回：if err != nil { return err }。Go 1.13 引入了 errors.Is、errors.As 和 fmt.Errorf %w 用于错误包装和链式判断。panic/recover 仅用于不可恢复的严重错误。"
+  },
+  {
+    "id": "go-021",
+    "subcategory": "错误处理",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "Go 中，以下关于 panic 和 recover 的描述正确的是？",
+    "options": "[\"recover 可以在任何函数中捕获 panic\", \"recover 只能在 defer 函数中生效\", \"panic 可以像 error 一样被正常处理\", \"recover 可以阻止 panic 发生\"]",
+    "answer": "recover 只能在 defer 函数中生效",
+    "explanation": "recover 必须放在 defer 函数中才能捕获 panic。正常执行流程中的 recover() 返回 nil。recover 捕获后程序从 panic 点恢复，继续执行 defer 之后的代码。"
+  },
+  {
+    "id": "go-022",
+    "subcategory": "Slice & Map",
+    "type": "choice",
+    "difficulty": "easy",
+    "question": "Go 中，以下关于 slice 的操作，哪项是不合法的？",
+    "options": "[\"append(slice, element)\", \"slice = slice[1:]\", \"slice[10] = 1 (slice 长度为 5)\", \"copy(dst, src)\"]",
+    "answer": "slice[10] = 1 (slice 长度为 5)",
+    "explanation": "slice 下标访问不能越界，否则 panic。append 可以自动扩容，copy 按最小长度复制。注意：slice 的底层是数组，多个 slice 可能共享同一底层数组。"
+  },
+  {
+    "id": "go-023",
+    "subcategory": "Slice & Map",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "Go 中，map 是并发安全的吗？",
+    "options": "[\"是，Go 的所有类型都是并发安全的\", \"否，并发读写会 panic，需使用 sync.Mutex 或 sync.Map\", \"只读并发安全，读写不安全\", \"取决于 key 的类型\"]",
+    "answer": "否，并发读写会 panic，需使用 sync.Mutex 或 sync.Map",
+    "explanation": "Go 原生 map 不是并发安全的。并发读写会触发 fatal error: concurrent map read and map write。解决方案：sync.Mutex/sync.RWMutex 保护，或使用 sync.Map（读写分离，适合读多写少）。"
+  },
+  {
+    "id": "go-024",
+    "subcategory": "Slice & Map",
+    "type": "fill",
+    "difficulty": "medium",
+    "question": "Go 中，slice 的底层结构包含三个字段：指向底层数组的指针、____ 和容量 (capacity)。",
+    "answer": "长度",
+    "explanation": "slice 底层结构（reflect.SliceHeader）：Data（数组指针）、Len（长度）、Cap（容量）。len() 返回长度，cap() 返回容量。append 时若容量不足，会分配新底层数组（通常 2 倍扩容）。"
+  },
+  {
+    "id": "go-025",
+    "subcategory": "并发模式",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "以下哪种模式不是 Go 的并发设计模式？",
+    "options": "[\"Fan-Out / Fan-In\", \"Pipeline\", \"Observer Pattern via channel\", \"Singleton Pattern via sync.Mutex\"]",
+    "answer": "Observer Pattern via channel",
+    "explanation": "Go 中 channel 可以实现类似观察者模式但并非原生模式。常见 Go 并发模式：Fan-Out（多个 goroutine 从同一 channel 读取）、Fan-In（多个 channel 合并）、Pipeline（流水线处理）、Or-Done、Tee 等。"
+  },
+  {
+    "id": "go-026",
+    "subcategory": "并发模式",
+    "type": "fill",
+    "difficulty": "hard",
+    "question": "Go 中，使用 ____ 语句可以同时等待多个 channel 操作，哪个先就绪就执行哪个分支。",
+    "answer": "select",
+    "explanation": "select 语句类似 switch，但用于 channel 操作。多个 case 同时就绪时随机选择一个。可加 default 分支实现非阻塞操作。常见的超时模式：select { case <-ch: ... case <-time.After(d): ... }。"
+  },
+  {
+    "id": "go-027",
+    "subcategory": "GMP 调度",
+    "type": "choice",
+    "difficulty": "hard",
+    "question": "Go 调度器中，当一个 G 发生系统调用（如文件 I/O）阻塞时会发生什么？",
+    "options": "[\"整个程序阻塞等待\", \"M 和 G 一起阻塞，P 被释放并绑定到其他 M\", \"G 被挂起，M 继续执行其他 G\", \"系统调用在 Go 中不会阻塞\"]",
+    "answer": "M 和 G 一起阻塞，P 被释放并绑定到其他 M",
+    "explanation": "系统调用阻塞时，M 和 G 进入阻塞，P 被释放并寻找或创建新的 M 来执行其他 G。这确保了即使有阻塞操作，CPU 核心（P）也不会闲置。网络 I/O 使用 NetPoller 异步模型，不会阻塞 M。"
+  },
+  {
+    "id": "go-028",
+    "subcategory": "GMP 调度",
+    "type": "choice",
+    "difficulty": "hard",
+    "question": "Go 的工作窃取 (Work Stealing) 调度策略是指？",
+    "options": "[\"M 从其他 M 窃取 G\", \"P 从其他 P 的本地队列窃取 G\", \"G 从其他 G 窃取执行时间\", \"没有这种策略\"]",
+    "answer": "P 从其他 P 的本地队列窃取 G",
+    "explanation": "当 P 的本地运行队列为空时，会从其他 P 的本地队列尾部窃取一半的 G（或从全局队列获取）。工作窃取保证了负载均衡，提高了 CPU 利用率。"
+  },
+  {
+    "id": "go-029",
+    "subcategory": "性能优化",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "在 Go 中，以下哪种做法最有利于减少 GC 压力？",
+    "options": "[\"多使用指针\", \"减少堆分配，尽量栈分配\", \"增加 GOGC 值\", \"频繁创建新对象\"]",
+    "answer": "减少堆分配，尽量栈分配",
+    "explanation": "减少 GC 压力：减少堆分配（使用 sync.Pool 对象复用、预分配 slice 容量、栈分配）。指针会增加 GC 扫描成本。GOGC 默认 100，增大减少 GC 频率但增加内存使用。"
+  },
+  {
+    "id": "go-030",
+    "subcategory": "性能优化",
+    "type": "fill",
+    "difficulty": "hard",
+    "question": "Go 中，用于临时对象复用的同步池叫做 ____，可以减少 GC 压力。",
+    "answer": "sync.Pool",
+    "explanation": "sync.Pool 用于存储和复用临时对象。Get() 获取对象（池空则调用 New 创建），Put() 归还对象。适合高频创建销毁的对象（如 buffer）。注意：Pool 中的对象可能被 GC 自动清理。"
+  },
+  {
+    "id": "go-031",
+    "subcategory": "Web 框架",
+    "type": "choice",
+    "difficulty": "easy",
+    "question": "以下哪个是 Go 中最流行的 HTTP 框架？",
+    "options": "[\"Gin\", \"Django\", \"Express\", \"Spring\"]",
+    "answer": "Gin",
+    "explanation": "Gin 是 Go 最流行的 HTTP Web 框架，以高性能和简洁 API 著称。其他知名 Go 框架：Echo、Fiber、Beego。Django 是 Python 框架，Express 是 Node.js 框架，Spring 是 Java 框架。"
+  },
+  {
+    "id": "go-032",
+    "subcategory": "Web 框架",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "Gin 框架中，中间件 (Middleware) 的执行顺序是？",
+    "options": "[\"洋葱模型：请求按注册顺序进入，响应按逆序返回\", \"栈模型：后注册的先执行\", \"队列模型：先注册的先执行\", \"随机顺序\"]",
+    "answer": "洋葱模型：请求按注册顺序进入，响应按逆序返回",
+    "explanation": "Gin 中间件采用洋葱模型。c.Next() 之前的代码按注册顺序执行，c.Next() 之后的代码按逆序执行。c.Abort() 可以中断后续中间件的执行。"
+  },
+  {
+    "id": "go-033",
+    "subcategory": "数据库",
+    "type": "choice",
+    "difficulty": "easy",
+    "question": "Go 中，最常用的 ORM 库是？",
+    "options": "[\"GORM\", \"Hibernate\", \"SQLAlchemy\", \"Entity Framework\"]",
+    "answer": "GORM",
+    "explanation": "GORM 是 Go 最流行的 ORM 库，支持自动迁移、关联、事务、Hook 等。其他 Go ORM：Ent（Facebook）、sqlx（轻量）、sqlc（代码生成）。Hibernate 是 Java，SQLAlchemy 是 Python，EF 是 .NET。"
+  },
+  {
+    "id": "go-034",
+    "subcategory": "数据库",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "Go 中 database/sql 包的连接池相关配置采用什么策略？",
+    "options": "[\"连接池默认无限大小\", \"SetMaxOpenConns 限制最大连接数，SetMaxIdleConns 限制最大空闲连接数\", \"连接池由 ORM 框架管理\", \"Go 没有连接池\"]",
+    "answer": "SetMaxOpenConns 限制最大连接数，SetMaxIdleConns 限制最大空闲连接数",
+    "explanation": "database/sql 自带连接池：SetMaxOpenConns（最大打开连接数）、SetMaxIdleConns（最大空闲连接数）、SetConnMaxLifetime（连接最大存活时间）。默认 MaxOpenConns 无限制，生产环境必须设置。"
+  },
+  {
+    "id": "go-035",
+    "subcategory": "测试",
+    "type": "choice",
+    "difficulty": "easy",
+    "question": "Go 中，单元测试文件的命名规范是？",
+    "options": "[\"test_xxx.go\", \"xxx_test.go\", \"xxx.test.go\", \"test.go\"]",
+    "answer": "xxx_test.go",
+    "explanation": "测试文件以 _test.go 结尾，测试函数以 Test 开头（func TestXxx(t *testing.T)）。基准测试以 Benchmark 开头，示例测试以 Example 开头。使用 go test 命令运行。"
+  },
+  {
+    "id": "go-036",
+    "subcategory": "测试",
+    "type": "fill",
+    "difficulty": "medium",
+    "question": "Go 中，表格驱动测试通常使用包含测试用例的 ____ 结构体的切片来组织测试数据和预期结果。",
+    "answer": "匿名",
+    "explanation": "Go 推崇表格驱动测试（Table-Driven Tests），定义匿名结构体切片：tests := []struct{ name, input, expected }{...}，循环遍历执行 t.Run(tt.name, func(t *testing.T) {...})。"
+  },
+  {
+    "id": "go-037",
+    "subcategory": "包管理",
+    "type": "choice",
+    "difficulty": "easy",
+    "question": "Go 的依赖管理使用什么工具？",
+    "options": "[\"Go Modules (go mod)\", \"dep\", \"glide\", \"GOPATH\"]",
+    "answer": "Go Modules (go mod)",
+    "explanation": "从 Go 1.11 起引入 Go Modules，Go 1.16 成为默认模式。go.mod 定义模块和依赖，go.sum 记录校验和。常用命令：go mod init/tidy/download/vendor。"
+  },
+  {
+    "id": "go-038",
+    "subcategory": "包管理",
+    "type": "fill",
+    "difficulty": "medium",
+    "question": "Go Modules 中，使用 ____ 命令可以将依赖复制到 vendor 目录，实现离线构建。",
+    "answer": "go mod vendor",
+    "explanation": "go mod vendor 将依赖复制到 vendor 目录。构建时使用 go build -mod=vendor 强制使用 vendor 中的依赖。适合离线环境或 CI/CD 中的可重现构建。"
+  },
+  {
+    "id": "go-039",
+    "subcategory": "反射",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "Go 的反射基于哪个包？",
+    "options": "[\"reflect\", \"unsafe\", \"fmt\", \"runtime\"]",
+    "answer": "reflect",
+    "explanation": "reflect 包提供运行时反射能力：TypeOf() 获取类型信息，ValueOf() 获取值信息。反射常用于 JSON 序列化、ORM、依赖注入等框架中。反射有性能开销，应谨慎使用。"
+  },
+  {
+    "id": "go-040",
+    "subcategory": "反射",
+    "type": "choice",
+    "difficulty": "hard",
+    "question": "Go 反射中，要修改一个变量的值，必须传入什么？",
+    "options": "[\"变量的值副本\", \"变量的指针（可寻址）\", \"变量的类型信息\", \"不可以通过反射修改变量\"]",
+    "answer": "变量的指针（可寻址）",
+    "explanation": "通过反射修改值：必须传入指针，且调用 Elem() 获取底层元素。用 CanSet() 检查是否可设置。reflect.ValueOf(&x).Elem().SetInt(42)。直接传值则不可寻址，Set 会 panic。"
+  },
+  {
+    "id": "go-041",
+    "subcategory": "并发安全",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "以下哪种操作在 Go 中天然是原子性的？",
+    "options": "[\"i++ 对 int64 操作\", \"sync/atomic 包的操作\", \"map 的读写\", \"string 的拼接\"]",
+    "answer": "sync/atomic 包的操作",
+    "explanation": "sync/atomic 提供原子操作（AddInt64, LoadInt64, StoreInt64, CompareAndSwapInt64 等）。普通的 i++ 不是原子的（包括读-改-写三步）。map 和 string 操作也非原子。"
+  },
+  {
+    "id": "go-042",
+    "subcategory": "并发安全",
+    "type": "fill",
+    "difficulty": "hard",
+    "question": "Go 中，使用 ____ 类型可以实现只执行一次的操作（如单例初始化）。",
+    "answer": "sync.Once",
+    "explanation": "sync.Once 的 Do() 方法保证传入的函数只执行一次，即使多个 goroutine 并发调用。常用于单例模式、初始化配置等场景。底层基于原子操作和互斥锁实现。"
+  },
+  {
+    "id": "go-043",
+    "subcategory": "CGO",
+    "type": "choice",
+    "difficulty": "hard",
+    "question": "关于 CGO，以下说法错误的是？",
+    "options": "[\"CGO 允许 Go 调用 C 代码\", \"启用 CGO 后交叉编译变困难\", \"CGO 调用没有性能开销\", \"使用 CGO 需要 import \"C\"\"]",
+    "answer": "CGO 调用没有性能开销",
+    "explanation": "CGO 调用有显著的性能开销（约几十到几百纳秒），因为涉及 Go 和 C 之间的栈切换、内存模型转换。CGO 不是 Go 和 C 之间的函数调用，而是通过 runtime 的桥接机制。Go 1.24 后 CGO 使用更受限。"
+  },
+  {
+    "id": "go-044",
+    "subcategory": "错误处理",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "Go 1.13 中，什么方式可以判断一个 error 是否包装了某个特定错误？",
+    "options": "[\"err == targetErr\", \"errors.Is(err, targetErr)\", \"err.Error() == targetErr.Error()\", \"err.Contains(targetErr)\"]",
+    "answer": "errors.Is(err, targetErr)",
+    "explanation": "errors.Is() 会沿着错误链（%w 包装）检查是否包含特定错误。errors.As() 用于类型断言，检查错误链中是否有某个类型的错误。直接比较 == 只能判断最外层错误。"
+  },
+  {
+    "id": "go-045",
+    "subcategory": "HTTP 服务",
+    "type": "choice",
+    "difficulty": "easy",
+    "question": "Go 中启动一个 HTTP 服务器，主要使用哪个包？",
+    "options": "[\"net/http\", \"net/tcp\", \"io/http\", \"server\"]",
+    "answer": "net/http",
+    "explanation": "net/http 提供 HTTP 客户端和服务端实现。http.ListenAndServe(\":8080\", nil) 启动服务器，http.HandleFunc 注册路由。生产环境建议使用更长的超时配置：&http.Server{ReadTimeout, WriteTimeout, ...}。"
+  },
+  {
+    "id": "go-046",
+    "subcategory": "HTTP 服务",
+    "type": "fill",
+    "difficulty": "medium",
+    "question": "Go 中，HTTP 中间件通常定义为 func(http.Handler) ____ 类型的函数。",
+    "answer": "http.Handler",
+    "explanation": "Go HTTP 中间件标准模式：func(next http.Handler) http.Handler，接收一个 Handler 返回一个 Handler，形成链式调用。例如 Logger 中间件记录请求日志，Auth 中间件验证身份。"
+  },
+  {
+    "id": "go-047",
+    "subcategory": "字符串",
+    "type": "choice",
+    "difficulty": "easy",
+    "question": "Go 中，字符串拼接效率最高的方式是？",
+    "options": "[\"使用 + 运算符\", \"使用 strings.Builder\", \"使用 fmt.Sprintf\", \"使用 bytes.Buffer\"]",
+    "answer": "使用 strings.Builder",
+    "explanation": "字符串拼接效率：strings.Builder > bytes.Buffer > fmt.Sprintf > +。strings.Builder 使用底层字节切片和 unsafe 转换为字符串，避免了内存分配和复制。少量拼接可用 +，Go 编译器会优化。"
+  },
+  {
+    "id": "go-048",
+    "subcategory": "字符串",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "Go 中 string 类型的底层结构是？",
+    "options": "[\"字符数组\", \"StringHeader: 数据指针+长度\", \"字符链表\", \"动态数组\"]",
+    "answer": "StringHeader: 数据指针+长度",
+    "explanation": "string 底层是 reflect.StringHeader{Data uintptr, Len int}，包含指向底层字节数组的指针和长度。string 是不可变的（immutable），修改会创建新字符串。len() 返回字节数，不是字符数（中文占3字节）。"
+  },
+  {
+    "id": "go-049",
+    "subcategory": "编译",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "关于 Go 的编译，以下说法错误的是？",
+    "options": "[\"Go 编译为静态链接的二进制文件\", \"GOOS 和 GOARCH 环境变量用于交叉编译\", \"Go 编译速度快\", \"Go 需要运行时解释执行\"]",
+    "answer": "Go 需要运行时解释执行",
+    "explanation": "Go 是编译型语言，编译为本地机器码，不需要解释执行。但每个 Go 二进制包含 Go runtime（goroutine 调度、GC 等）。交叉编译：GOOS=linux GOARCH=amd64 go build。"
+  },
+  {
+    "id": "go-050",
+    "subcategory": "内存对齐",
+    "type": "choice",
+    "difficulty": "hard",
+    "question": "Go 中，结构体字段的排列顺序为什么可能影响内存占用？",
+    "options": "[\"因为内存对齐 (Memory Alignment)\", \"因为字段顺序影响 GC\", \"因为编译器优化\", \"没有影响\"]",
+    "answer": "因为内存对齐 (Memory Alignment)",
+    "explanation": "Go 结构体存在内存对齐，合理排列字段（从大到小）可以减少 padding，降低内存占用。例如 bytes.Buffer→bool→int64 比 int64→bytes.Buffer→bool 更紧凑。unsafe.Sizeof 可查看占用大小。"
+  },
+  {
+    "id": "go-051",
+    "subcategory": "基础语法",
+    "type": "fill",
+    "difficulty": "easy",
+    "question": "Go 中，switch 语句不需要写 ____，每个 case 默认不会 fallthrough。",
+    "answer": "break",
+    "explanation": "Go 的 switch 默认每个 case 自带 break，不会穿透到下一个 case。如需穿透，显式使用 fallthrough 关键字。switch 还可以不带表达式，等价于 if-else 链。"
+  },
+  {
+    "id": "go-052",
+    "subcategory": "基础语法",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "Go 中，以下关于数组和切片的描述，哪项是正确的？",
+    "options": "[\"数组长度是类型的一部分，[3]int 和 [5]int 是不同的类型\", \"切片是值类型\", \"数组可以 append\", \"数组和切片完全相同\"]",
+    "answer": "数组长度是类型的一部分，[3]int 和 [5]int 是不同的类型",
+    "explanation": "Go 中数组长度是类型的一部分，[3]int 和 [5]int 是不同的类型。数组是值类型（赋值会复制整个数组），切片是引用类型。只有切片支持 append。"
+  },
+  {
+    "id": "go-053",
+    "subcategory": "并发 (Goroutine)",
+    "type": "choice",
+    "difficulty": "hard",
+    "question": "以下关于 Go channel 的陈述，哪项是正确的？",
+    "options": "[\"无缓冲 channel 在发送时必须同时有接收者\", \"有缓冲 channel 永远不会阻塞\", \"关闭 channel 后不能再读取\", \"channel 可以重复关闭\"]",
+    "answer": "无缓冲 channel 在发送时必须同时有接收者",
+    "explanation": "无缓冲 channel 是同步的，发送和接收必须同时准备好。有缓冲 channel 在缓冲区满时发送方会阻塞。关闭后可继续读取剩余数据（读完返回零值）。重复关闭会 panic。"
+  },
+  {
+    "id": "go-054",
+    "subcategory": "模块设计",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "Go 中，如何实现其他语言中的枚举 (Enum)？",
+    "options": "[\"使用 const + iota\", \"使用 enum 关键字\", \"使用 type switch\", \"Go 不支持枚举\"]",
+    "answer": "使用 const + iota",
+    "explanation": "Go 没有 enum 关键字。使用 const + iota 实现枚举：type Color int; const (Red Color = iota; Blue; Green)。iota 在 const 块中从0开始递增，每行+1。"
+  },
+  {
+    "id": "go-055",
+    "subcategory": "标准库",
+    "type": "fill",
+    "difficulty": "medium",
+    "question": "Go 中，使用 ____ 包可以方便地处理命令行参数和子命令。",
+    "answer": "flag",
+    "explanation": "flag 包处理命令行参数：flag.String()、flag.Int()、flag.Parse()。更强大的 CLI 框架：cobra（Kubernetes 使用的）、urfave/cli。"
+  },
+  {
+    "id": "go-056",
+    "subcategory": "并发模式",
+    "type": "choice",
+    "difficulty": "hard",
+    "question": "以下关于 Go 并发模式中 'Or-Done' 模式的描述正确的是？",
+    "options": "[\"将多个 channel 的输出合并为一个\", \"监听 done channel，收到信号后安全关闭下游 channel\", \"限制并发 goroutine 数量\", \"将任务分发给多个 goroutine\"]",
+    "answer": "监听 done channel，收到信号后安全关闭下游 channel",
+    "explanation": "Or-Done模式：通过 select 监听 done channel，收到取消信号后停止从源 channel 读取。Fan-In 是合并多个 channel，Fan-Out 是分发任务，Semaphore 模式限制并发数。"
+  },
+  {
+    "id": "go-057",
+    "subcategory": "泛型",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "Go 从哪个版本开始支持泛型 (Generics)？",
+    "options": "[\"Go 1.18\", \"Go 1.16\", \"Go 1.20\", \"Go 不支持泛型\"]",
+    "answer": "Go 1.18",
+    "explanation": "Go 1.18（2022年3月）引入了泛型。使用类型参数语法：func Max[T constraints.Ordered](a, b T) T。类型约束通过 interface 定义，any 等价于 interface{}。"
+  },
+  {
+    "id": "go-058",
+    "subcategory": "泛型",
+    "type": "fill",
+    "difficulty": "hard",
+    "question": "Go 泛型中，类型约束使用关键字 ____ 定义在函数名后面的方括号中。实际上类型约束就是接口类型。",
+    "answer": "interface",
+    "explanation": "泛型类型约束：func Sum[T interface{ int | float64 }](a, b T) T 或简写 func Sum[T int | float64](a, b T) T。constraints 包（golang.org/x/exp/constraints）提供常用约束。"
+  },
+  {
+    "id": "go-059",
+    "subcategory": "项目管理",
+    "type": "choice",
+    "difficulty": "easy",
+    "question": "Go 项目中，内部包（不希望被外部导入）应放在哪个目录？",
+    "options": "[\"internal/\", \"pkg/\", \"vendor/\", \"cmd/\"]",
+    "answer": "internal/",
+    "explanation": "Go 约定：internal/ 目录的包只能被其父目录及父目录的子包导入，外部模块无法导入。pkg/ 是可选的公共库目录，cmd/ 放可执行程序入口，vendor/ 放依赖副本。"
+  },
+  {
+    "id": "go-060",
+    "subcategory": "综合",
+    "type": "choice",
+    "difficulty": "hard",
+    "question": "构建一个 Go 微服务时，以下哪种做法是最佳实践？",
+    "options": "[\"全局变量共享状态\", \"依赖注入 + 接口抽象 + 显式错误处理\", \"大量使用反射\", \"忽略 context 传递\"]",
+    "answer": "依赖注入 + 接口抽象 + 显式错误处理",
+    "explanation": "Go 微服务最佳实践：依赖注入（wire/fx）、接口抽象（方便测试mock）、context 贯穿调用链、显式错误处理、结构化日志（slog/zap）、metrics（prometheus）、优雅关闭（signal handling）。"
+  }
+]

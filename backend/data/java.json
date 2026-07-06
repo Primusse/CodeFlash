@@ -1,0 +1,589 @@
+[
+  {
+    "id": "java-001",
+    "subcategory": "JVM",
+    "type": "choice",
+    "difficulty": "easy",
+    "question": "JVM 中，对象实例存储在哪个内存区域？",
+    "options": "[\"堆 (Heap)\", \"栈 (Stack)\", \"方法区 (Method Area)\", \"程序计数器 (PC Register)\"]",
+    "answer": "堆 (Heap)",
+    "explanation": "JVM 堆是线程共享的区域，用于存储对象实例和数组。栈存储局部变量表、操作数栈等，方法区存储类信息、常量、静态变量。"
+  },
+  {
+    "id": "java-002",
+    "subcategory": "JVM",
+    "type": "choice",
+    "difficulty": "easy",
+    "question": "以下哪个不是 JVM 的垃圾回收算法？",
+    "options": "[\"标记-清除\", \"复制算法\", \"冒泡排序\", \"标记-整理\"]",
+    "answer": "冒泡排序",
+    "explanation": "冒泡排序是数据排序算法，不是 GC 算法。常见的 GC 算法有标记-清除、复制、标记-整理、分代收集。"
+  },
+  {
+    "id": "java-003",
+    "subcategory": "JVM",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "以下关于 G1 垃圾回收器的描述，正确的是？",
+    "options": "[\"G1 将堆划分为多个大小相等的 Region\", \"G1 只有 Young GC，没有 Mixed GC\", \"G1 不会产生 STW (Stop The World)\", \"G1 只能在 64 位 JVM 上使用\"]",
+    "answer": "G1 将堆划分为多个大小相等的 Region",
+    "explanation": "G1 将堆划分为多个大小相等的 Region（默认2048个），有 Young GC 和 Mixed GC，仍然会产生 STW 但时间可控。G1 不限于64位。"
+  },
+  {
+    "id": "java-004",
+    "subcategory": "JVM",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "Java 类加载的双亲委派模型中，类加载器的层次结构从顶层到底层是？",
+    "options": "[\"Bootstrap → Extension → Application\", \"Application → Extension → Bootstrap\", \"Bootstrap → Application → Extension\", \"Extension → Bootstrap → Application\"]",
+    "answer": "Bootstrap → Extension → Application",
+    "explanation": "双亲委派模型：Bootstrap ClassLoader（顶层，加载核心类）→ Extension ClassLoader（加载扩展类）→ Application ClassLoader（加载应用类）。加载请求逐层向上委托，父加载器无法加载时才由子加载器加载。"
+  },
+  {
+    "id": "java-005",
+    "subcategory": "JVM",
+    "type": "fill",
+    "difficulty": "medium",
+    "question": "JVM 内存模型中，用于存储类信息、常量、静态变量和即时编译器编译后的代码的区域是 ____。",
+    "answer": "方法区",
+    "explanation": "方法区（Method Area）是各线程共享的内存区域，存储已被虚拟机加载的类信息、常量、静态变量、JIT 编译后的代码等。JDK 8 后使用元空间（Metaspace）替代，元空间使用本地内存。"
+  },
+  {
+    "id": "java-006",
+    "subcategory": "JVM",
+    "type": "choice",
+    "difficulty": "hard",
+    "question": "以下哪种情况不会触发 Full GC？",
+    "options": "[\"System.gc() 被调用\", \"老年代空间不足\", \"永久代/元空间空间不足\", \"Eden 区空间不足\"]",
+    "answer": "Eden 区空间不足",
+    "explanation": "Eden 区空间不足触发的是 Minor GC（Young GC），不是 Full GC。Full GC 的触发条件包括：调用 System.gc()、老年代空间不足、元空间不足、CMS 并发失败等。"
+  },
+  {
+    "id": "java-007",
+    "subcategory": "集合",
+    "type": "choice",
+    "difficulty": "easy",
+    "question": "ArrayList 和 LinkedList 的区别，以下描述正确的是？",
+    "options": "[\"ArrayList 基于数组，查询快；LinkedList 基于链表，增删快\", \"ArrayList 基于链表，查询快；LinkedList 基于数组，增删快\", \"两者都是基于数组实现的\", \"两者都是基于链表实现的\"]",
+    "answer": "ArrayList 基于数组，查询快；LinkedList 基于链表，增删快",
+    "explanation": "ArrayList 底层是动态数组，支持 O(1) 随机访问；LinkedList 底层是双向链表，插入删除只需修改指针，但查询需要遍历。"
+  },
+  {
+    "id": "java-008",
+    "subcategory": "集合",
+    "type": "choice",
+    "difficulty": "easy",
+    "question": "HashMap 在 JDK 8 中，当链表长度超过多少时会转为红黑树？",
+    "options": "[\"6\", \"8\", \"10\", \"12\"]",
+    "answer": "8",
+    "explanation": "当链表长度大于阈值（默认为 8）且数组长度大于 64 时，链表会转换为红黑树以减少搜索时间从 O(n) 到 O(log n)。当红黑树节点少于 6 时会转回链表。"
+  },
+  {
+    "id": "java-009",
+    "subcategory": "集合",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "ConcurrentHashMap 在 JDK 8 中如何保证线程安全？",
+    "options": "[\"使用 Segment 分段锁\", \"使用 CAS + synchronized 锁住桶的首节点\", \"对所有方法加 synchronized\", \"使用 ReadWriteLock\"]",
+    "answer": "使用 CAS + synchronized 锁住桶的首节点",
+    "explanation": "JDK 7 的 ConcurrentHashMap 使用 Segment 分段锁。JDK 8 改为 CAS + synchronized 实现，只锁住发生冲突的桶的首节点，并发度更高。"
+  },
+  {
+    "id": "java-010",
+    "subcategory": "集合",
+    "type": "fill",
+    "difficulty": "medium",
+    "question": "HashMap 的默认初始容量是 ____，默认负载因子是 ____。",
+    "answer": "16 和 0.75",
+    "explanation": "HashMap 默认初始容量为 16，负载因子为 0.75。当元素数量超过 容量×负载因子 时会触发扩容（resize），容量变为原来的 2 倍。"
+  },
+  {
+    "id": "java-011",
+    "subcategory": "集合",
+    "type": "choice",
+    "difficulty": "hard",
+    "question": "关于 TreeMap，以下说法错误的是？",
+    "options": "[\"TreeMap 基于红黑树实现\", \"TreeMap 的 key 必须实现 Comparable 接口或传入 Comparator\", \"TreeMap 允许 null key\", \"TreeMap 的 get/put 操作时间复杂度为 O(log n)\"]",
+    "answer": "TreeMap 允许 null key",
+    "explanation": "TreeMap 不允许 null key（因为需要比较 key 进行排序），但允许 null value。HashMap 允许一个 null key 和多个 null value。"
+  },
+  {
+    "id": "java-012",
+    "subcategory": "并发",
+    "type": "choice",
+    "difficulty": "easy",
+    "question": "以下哪种方式不能创建线程？",
+    "options": "[\"继承 Thread 类\", \"实现 Runnable 接口\", \"实现 Callable 接口\", \"实现 Serializable 接口\"]",
+    "answer": "实现 Serializable 接口",
+    "explanation": "创建线程的常用方式：继承 Thread、实现 Runnable、实现 Callable（配合 FutureTask）、使用线程池。Serializable 是序列化接口，与线程无关。"
+  },
+  {
+    "id": "java-013",
+    "subcategory": "并发",
+    "type": "choice",
+    "difficulty": "easy",
+    "question": "synchronized 关键字不能用在以下哪个位置？",
+    "options": "[\"实例方法上\", \"静态方法上\", \"代码块上\", \"类定义上\"]",
+    "answer": "类定义上",
+    "explanation": "synchronized 可以用在实例方法（锁住 this）、静态方法（锁住 Class 对象）和代码块（指定锁对象），但不能用在类定义上。"
+  },
+  {
+    "id": "java-014",
+    "subcategory": "并发",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "关于 volatile 关键字，以下说法正确的是？",
+    "options": "[\"volatile 能保证原子性\", \"volatile 能保证可见性和禁止指令重排序\", \"volatile 可以替代 synchronized\", \"volatile 变量存储在方法区\"]",
+    "answer": "volatile 能保证可见性和禁止指令重排序",
+    "explanation": "volatile 保证变量的可见性（修改后立即刷新到主内存）和禁止指令重排序（内存屏障），但不能保证原子性（如 i++ 不是原子操作）。"
+  },
+  {
+    "id": "java-015",
+    "subcategory": "并发",
+    "type": "fill",
+    "difficulty": "medium",
+    "question": "Java 线程池的 7 个参数中，当任务队列满且线程数达到最大线程数时的拒绝策略，默认使用的是 ____。",
+    "answer": "AbortPolicy",
+    "explanation": "ThreadPoolExecutor 默认拒绝策略是 AbortPolicy，会抛出 RejectedExecutionException。其他策略：CallerRunsPolicy（调用者执行）、DiscardPolicy（直接丢弃）、DiscardOldestPolicy（丢弃最旧任务）。"
+  },
+  {
+    "id": "java-016",
+    "subcategory": "并发",
+    "type": "choice",
+    "difficulty": "hard",
+    "question": "关于 AQS (AbstractQueuedSynchronizer)，以下描述错误的是？",
+    "options": "[\"AQS 使用一个 int 类型的 state 表示同步状态\", \"AQS 内部维护一个 FIFO 的 CLH 队列\", \"ReentrantLock 和 CountDownLatch 都基于 AQS 实现\", \"AQS 使用自旋锁实现，不涉及线程阻塞\"]",
+    "answer": "AQS 使用自旋锁实现，不涉及线程阻塞",
+    "explanation": "AQS 使用 LockSupport.park() 阻塞线程，而不是纯自旋。当线程获取锁失败时，会加入 CLH 队列并阻塞，等待前驱节点唤醒。只有短时间等待时会自旋。"
+  },
+  {
+    "id": "java-017",
+    "subcategory": "Spring",
+    "type": "choice",
+    "difficulty": "easy",
+    "question": "Spring 中，@Autowired 注解默认按什么方式注入？",
+    "options": "[\"按名称 (byName)\", \"按类型 (byType)\", \"按构造函数\", \"按 setter 方法\"]",
+    "answer": "按类型 (byType)",
+    "explanation": "@Autowired 默认按类型（byType）注入。如果有多个同类型的 bean，再按名称（@Qualifier）匹配。也可以用 @Primary 指定首选 bean。"
+  },
+  {
+    "id": "java-018",
+    "subcategory": "Spring",
+    "type": "choice",
+    "difficulty": "easy",
+    "question": "Spring Bean 的默认作用域是？",
+    "options": "[\"singleton\", \"prototype\", \"request\", \"session\"]",
+    "answer": "singleton",
+    "explanation": "Spring Bean 默认作用域是 singleton（单例），即整个 Spring 容器中只有一个实例。prototype 每次获取都创建新实例，request/session 用于 Web 环境。"
+  },
+  {
+    "id": "java-019",
+    "subcategory": "Spring",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "Spring AOP 的代理方式，以下说法正确的是？",
+    "options": "[\"始终使用 JDK 动态代理\", \"始终使用 CGLIB 代理\", \"目标类实现了接口时使用 JDK 动态代理，否则使用 CGLIB\", \"Spring Boot 2.x 默认使用 JDK 动态代理\"]",
+    "answer": "目标类实现了接口时使用 JDK 动态代理，否则使用 CGLIB",
+    "explanation": "Spring AOP 默认：目标类实现接口则用 JDK 动态代理（基于接口），否则用 CGLIB（基于继承）。Spring Boot 2.x 默认改为 CGLIB，可通过 spring.aop.proxy-target-class 配置。"
+  },
+  {
+    "id": "java-020",
+    "subcategory": "Spring",
+    "type": "fill",
+    "difficulty": "medium",
+    "question": "Spring 事务的传播行为中，如果当前没有事务则新建事务，如果已有事务则加入当前事务，这种行为叫做 ____。",
+    "answer": "REQUIRED",
+    "explanation": "PROPAGATION_REQUIRED 是默认传播行为：有事务则加入，无则新建。其他常见行为：REQUIRES_NEW（挂起当前、新建）、NESTED（嵌套事务）、SUPPORTS（有则加入、无则非事务运行）。"
+  },
+  {
+    "id": "java-021",
+    "subcategory": "Spring",
+    "type": "choice",
+    "difficulty": "hard",
+    "question": "@Transactional 注解在以下哪种情况会失效？",
+    "options": "[\"方法被 public 修饰\", \"同类中非事务方法直接调用事务方法\", \"通过接口调用\", \"抛出 RuntimeException\"]",
+    "answer": "同类中非事务方法直接调用事务方法",
+    "explanation": "Spring 事务基于 AOP 代理实现。同类中方法调用（this.method()）不经过代理对象，事务注解失效。解决方法：将方法移到另一个 Bean、使用 AopContext.currentProxy() 或注入自身。"
+  },
+  {
+    "id": "java-022",
+    "subcategory": "Spring",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "Spring Boot 的自动装配原理基于哪个注解？",
+    "options": "[\"@SpringBootApplication → @ComponentScan\", \"@SpringBootApplication → @EnableAutoConfiguration\", \"@Configuration\", \"@Import\"]",
+    "answer": "@SpringBootApplication → @EnableAutoConfiguration",
+    "explanation": "@SpringBootApplication 包含 @EnableAutoConfiguration，它会通过 spring.factories 文件读取所有自动配置类，然后根据条件注解（@ConditionalOnClass 等）选择性加载。"
+  },
+  {
+    "id": "java-023",
+    "subcategory": "MyBatis",
+    "type": "choice",
+    "difficulty": "easy",
+    "question": "MyBatis 中，#{} 和 ${} 的区别，以下描述正确的是？",
+    "options": "[\"#{} 会引起 SQL 注入，${} 是预编译的\", \"#{} 是预编译占位符，${} 是字符串替换\", \"两者没有区别\", \"#{} 用于动态 SQL，${} 用于静态 SQL\"]",
+    "answer": "#{} 是预编译占位符，${} 是字符串替换",
+    "explanation": "#{} 使用 PreparedStatement 预编译，安全防注入；${} 直接字符串替换，有 SQL 注入风险。${} 通常用于动态表名、列名等无法预编译的场景。"
+  },
+  {
+    "id": "java-024",
+    "subcategory": "MyBatis",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "MyBatis 一级缓存和二级缓存的区别？",
+    "options": "[\"一级缓存是 SqlSession 级别，二级缓存是 Mapper 级别\", \"一级缓存是 Mapper 级别，二级缓存是 SqlSession 级别\", \"两者都是 SqlSession 级别\", \"两者都是全局级别\"]",
+    "answer": "一级缓存是 SqlSession 级别，二级缓存是 Mapper 级别",
+    "explanation": "一级缓存默认开启，SqlSession 级别，同一会话中相同查询只执行一次 SQL。二级缓存需要手动配置，namespace（Mapper）级别，跨 SqlSession 共享。"
+  },
+  {
+    "id": "java-025",
+    "subcategory": "MySQL",
+    "type": "choice",
+    "difficulty": "easy",
+    "question": "MySQL 中，InnoDB 引擎的默认索引结构是？",
+    "options": "[\"Hash 索引\", \"B+ 树\", \"B 树\", \"二叉搜索树\"]",
+    "answer": "B+ 树",
+    "explanation": "InnoDB 使用 B+ 树作为索引结构。B+ 树所有数据存储在叶子节点，非叶子节点只存 key，叶子节点形成有序链表，支持范围查询和排序。"
+  },
+  {
+    "id": "java-026",
+    "subcategory": "MySQL",
+    "type": "choice",
+    "difficulty": "easy",
+    "question": "以下哪个不是数据库事务的 ACID 特性？",
+    "options": "[\"原子性 (Atomicity)\", \"一致性 (Consistency)\", \"持久性 (Durability)\", \"可用性 (Availability)\"]",
+    "answer": "可用性 (Availability)",
+    "explanation": "ACID：Atomicity（原子性）、Consistency（一致性）、Isolation（隔离性）、Durability（持久性）。可用性是 CAP 定理中的概念（Consistency, Availability, Partition Tolerance）。"
+  },
+  {
+    "id": "java-027",
+    "subcategory": "MySQL",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "MySQL InnoDB 的行锁是通过什么实现的？",
+    "options": "[\"对行数据加锁\", \"对索引项加锁\", \"对主键加锁\", \"对页加锁\"]",
+    "answer": "对索引项加锁",
+    "explanation": "InnoDB 行锁是通过给索引上的索引项加锁实现的。只有通过索引条件检索数据才使用行锁，否则升级为表锁。这意味着如果 SQL 没有走索引，行锁会退化为表锁。"
+  },
+  {
+    "id": "java-028",
+    "subcategory": "MySQL",
+    "type": "choice",
+    "difficulty": "hard",
+    "question": "MySQL 中，RR（可重复读）隔离级别如何解决幻读问题？",
+    "options": "[\"通过表锁\", \"通过 MVCC (多版本并发控制)\", \"通过 Gap Lock + 行锁 (Next-Key Lock)\", \"RR 隔离级别无法解决幻读\"]",
+    "answer": "通过 Gap Lock + 行锁 (Next-Key Lock)",
+    "explanation": "InnoDB 在 RR 级别使用 Next-Key Lock（行锁 + 间隙锁）解决幻读。MVCC 解决快照读的幻读，Next-Key Lock 解决当前读（SELECT ... FOR UPDATE）的幻读。"
+  },
+  {
+    "id": "java-029",
+    "subcategory": "MySQL",
+    "type": "fill",
+    "difficulty": "medium",
+    "question": "MySQL 索引的最左前缀原则指的是，对于复合索引 (a, b, c)，查询条件中必须包含 ____ 才能使用该索引。",
+    "answer": "a",
+    "explanation": "最左前缀原则：复合索引 (a,b,c) 中，查询条件必须从最左列 a 开始匹配。可以使用索引的场景：WHERE a=1, WHERE a=1 AND b=2, WHERE a=1 AND b=2 AND c=3。WHERE b=2 无法使用此索引。"
+  },
+  {
+    "id": "java-030",
+    "subcategory": "MySQL",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "聚簇索引和非聚簇索引的区别？",
+    "options": "[\"聚簇索引的叶子节点存储的是数据行本身，非聚簇索引叶子节点存储的是主键值\", \"两者叶子节点都存储数据行\", \"聚簇索引比非聚簇索引慢\", \"非聚簇索引叶子节点存储数据行\"]",
+    "answer": "聚簇索引的叶子节点存储的是数据行本身，非聚簇索引叶子节点存储的是主键值",
+    "explanation": "InnoDB 中，聚簇索引（主键索引）叶子节点包含完整的数据行。非聚簇索引（二级索引）叶子节点存储主键值，查询需要回表（通过主键再去聚簇索引查数据）。"
+  },
+  {
+    "id": "java-031",
+    "subcategory": "Redis",
+    "type": "choice",
+    "difficulty": "easy",
+    "question": "Redis 中，以下哪种数据类型不是基本的 5 种？",
+    "options": "[\"String\", \"List\", \"Set\", \"Tree\"]",
+    "answer": "Tree",
+    "explanation": "Redis 五种基本数据类型：String、List、Set、ZSet (Sorted Set)、Hash。Tree 不是 Redis 的数据类型。此外还有 BitMap、HyperLogLog、GEO、Stream 等高级类型。"
+  },
+  {
+    "id": "java-032",
+    "subcategory": "Redis",
+    "type": "choice",
+    "difficulty": "easy",
+    "question": "Redis 的持久化方式不包括？",
+    "options": "[\"RDB (快照)\", \"AOF (追加文件)\", \"混合持久化\", \"WAL (预写日志)\"]",
+    "answer": "WAL (预写日志)",
+    "explanation": "Redis 持久化方式：RDB（指定时间间隔生成快照）、AOF（记录每次写操作）、混合持久化（RDB + AOF 结合）。WAL 是其他数据库（如 RocksDB）常使用的机制。"
+  },
+  {
+    "id": "java-033",
+    "subcategory": "Redis",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "Redis 的过期键删除策略是什么？",
+    "options": "[\"惰性删除 + 定期删除\", \"立即删除\", \"只使用惰性删除\", \"只使用定期删除\"]",
+    "answer": "惰性删除 + 定期删除",
+    "explanation": "Redis 采用惰性删除（访问时检查是否过期）+ 定期删除（每隔一段时间随机检查一批 key）。这平衡了 CPU 和内存开销。Redis 还有内存淘汰策略处理内存不足情况。"
+  },
+  {
+    "id": "java-034",
+    "subcategory": "Redis",
+    "type": "choice",
+    "difficulty": "hard",
+    "question": "Redis 集群模式下，数据分片使用什么算法？",
+    "options": "[\"一致性哈希\", \"哈希槽 (Hash Slot)\", \"取模哈希\", \"随机分配\"]",
+    "answer": "哈希槽 (Hash Slot)",
+    "explanation": "Redis Cluster 使用哈希槽（共 16384 个 slot）进行数据分片。每个 key 通过 CRC16(key) % 16384 计算出槽位，每个节点负责一部分槽位。相比一致性哈希，迁移和管理更简单。"
+  },
+  {
+    "id": "java-035",
+    "subcategory": "Redis",
+    "type": "fill",
+    "difficulty": "medium",
+    "question": "Redis 中，解决缓存穿透、缓存击穿、缓存雪崩问题，常用的布隆过滤器主要解决 ____ 问题。",
+    "answer": "缓存穿透",
+    "explanation": "缓存穿透（查询不存在的数据）→ 布隆过滤器；缓存击穿（热点 key 过期瞬间大量请求）→ 互斥锁/永不过期；缓存雪崩（大量 key 同时过期）→ 过期时间加随机值/多级缓存。"
+  },
+  {
+    "id": "java-036",
+    "subcategory": "设计模式",
+    "type": "choice",
+    "difficulty": "easy",
+    "question": "单例模式中，哪种实现方式是线程安全的且延迟加载的？",
+    "options": "[\"饿汉式\", \"懒汉式（无同步）\", \"静态内部类\", \"枚举\"]",
+    "answer": "静态内部类",
+    "explanation": "静态内部类方式线程安全且延迟加载：JVM 在加载外部类时不会加载内部类，只有调用 getInstance() 时才会加载 SingletonHolder，由 JVM 保证线程安全。枚举方式也安全但不是延迟加载。"
+  },
+  {
+    "id": "java-037",
+    "subcategory": "设计模式",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "Spring 中使用了哪些设计模式？以下组合正确的是？",
+    "options": "[\"单例、工厂、代理、模板方法\", \"单例、工厂、代理、观察者（所有这些都是）\", \"只有单例和工厂\", \"只有代理和模板方法\"]",
+    "answer": "单例、工厂、代理、观察者（所有这些都是）",
+    "explanation": "Spring 大量使用设计模式：Bean 默认单例、BeanFactory 是工厂模式、AOP 是代理模式、ApplicationListener 是观察者模式、JdbcTemplate 是模板方法模式、AOP 还用到装饰器和责任链等。"
+  },
+  {
+    "id": "java-038",
+    "subcategory": "设计模式",
+    "type": "fill",
+    "difficulty": "medium",
+    "question": "设计模式中，将对象的创建和使用分离，提供一个创建对象的接口，让子类决定实例化哪个类。这种模式叫做 ____。",
+    "answer": "工厂方法模式",
+    "explanation": "工厂方法模式（Factory Method）：定义一个创建对象的接口，让子类决定实例化哪个类。简单工厂不属于 GoF 23 种设计模式。抽象工厂用于创建一系列相关对象。"
+  },
+  {
+    "id": "java-039",
+    "subcategory": "网络",
+    "type": "choice",
+    "difficulty": "easy",
+    "question": "HTTP 状态码 302 表示什么？",
+    "options": "[\"请求成功\", \"永久重定向\", \"临时重定向\", \"服务器内部错误\"]",
+    "answer": "临时重定向",
+    "explanation": "301 永久重定向、302 临时重定向、200 请求成功、500 服务器内部错误。301 浏览器会缓存跳转地址，302 不会缓存。"
+  },
+  {
+    "id": "java-040",
+    "subcategory": "网络",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "TCP 三次握手中，第三次握手的作用是？",
+    "options": "[\"确认服务端的发送能力\", \"确认客户端的接收能力\", \"防止已失效的连接请求到达服务端\", \"协商窗口大小\"]",
+    "answer": "防止已失效的连接请求到达服务端",
+    "explanation": "第三次握手主要防止已失效的连接请求到达服务端。如果只有两次握手，服务端收到一个已过期的连接请求后会直接建立连接，浪费资源。"
+  },
+  {
+    "id": "java-041",
+    "subcategory": "消息队列",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "消息队列中，以下哪种情况不会导致消息丢失？",
+    "options": "[\"生产者发送消息时网络故障\", \"消费者自动 ACK 后处理失败\", \"MQ Broker 宕机且未持久化\", \"消费者手动 ACK 且正确处理完成\"]",
+    "answer": "消费者手动 ACK 且正确处理完成",
+    "explanation": "消息丢失场景：生产者发送失败、Broker 宕机未持久化、消费者自动 ACK 后处理异常。手动 ACK 在正确处理完成后确认，不会丢失消息。这也是可靠消费的推荐做法。"
+  },
+  {
+    "id": "java-042",
+    "subcategory": "消息队列",
+    "type": "fill",
+    "difficulty": "hard",
+    "question": "Kafka 中，每个 Partition 在集群中有多个副本，其中负责处理读写请求的副本是 ____，其他副本只负责同步数据。",
+    "answer": "Leader",
+    "explanation": "Kafka 每个 Partition 有一个 Leader 副本和多个 Follower 副本。Leader 处理所有读写请求，Follower 从 Leader 同步数据。当 Leader 故障时，从 ISR (In-Sync Replicas) 中选新 Leader。"
+  },
+  {
+    "id": "java-043",
+    "subcategory": "计算机网络",
+    "type": "choice",
+    "difficulty": "easy",
+    "question": "OSI 七层模型中，HTTP 协议属于哪一层？",
+    "options": "[\"传输层\", \"网络层\", \"应用层\", \"会话层\"]",
+    "answer": "应用层",
+    "explanation": "HTTP 属于应用层（第7层）。TCP/UDP 在传输层（第4层），IP 在网络层（第3层）。OSI 七层从下到上：物理层、数据链路层、网络层、传输层、会话层、表示层、应用层。"
+  },
+  {
+    "id": "java-044",
+    "subcategory": "微服务",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "微服务架构中，服务发现通常使用哪种组件？",
+    "options": "[\"Redis\", \"Nacos / Consul / Eureka\", \"Kafka\", \"Elasticsearch\"]",
+    "answer": "Nacos / Consul / Eureka",
+    "explanation": "常见的服务发现组件：Nacos（阿里）、Consul、Eureka（Netflix）、Zookeeper。Redis 是缓存，Kafka 是消息队列，Elasticsearch 是搜索引擎。"
+  },
+  {
+    "id": "java-045",
+    "subcategory": "微服务",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "分布式系统中，CAP 定理指的是？",
+    "options": "[\"一致性、可用性、分区容错性，最多同时满足两个\", \"一致性、原子性、分区容错性\", \"一致性、可用性、持久性\", \"可用性、分区容错性、隔离性\"]",
+    "answer": "一致性、可用性、分区容错性，最多同时满足两个",
+    "explanation": "CAP 定理：Consistency（一致性）、Availability（可用性）、Partition Tolerance（分区容错性）。分布式系统中 P 必须满足，只能在 C 和 A 之间权衡。"
+  },
+  {
+    "id": "java-046",
+    "subcategory": "JVM",
+    "type": "choice",
+    "difficulty": "hard",
+    "question": "以下哪种对象可以被作为 GC Roots？",
+    "options": "[\"虚拟机栈中引用的对象\", \"堆中的对象\", \"方法区中的字符串常量池\", \"被 finalize 的对象\"]",
+    "answer": "虚拟机栈中引用的对象",
+    "explanation": "GC Roots 包括：虚拟机栈（栈帧中的本地变量表）中引用的对象、方法区中静态属性引用的对象、方法区中常量引用的对象、JNI 引用的对象、所有被同步锁持有的对象等。"
+  },
+  {
+    "id": "java-047",
+    "subcategory": "并发",
+    "type": "fill",
+    "difficulty": "hard",
+    "question": "Java 中，ThreadLocal 可能导致 ____ 问题，原因是用完没有调用 remove() 方法。",
+    "answer": "内存泄漏",
+    "explanation": "ThreadLocal 的 key 是弱引用，但 value 是强引用。ThreadLocal 被 GC 后 key 为 null，但 value 仍然无法被回收（entry 存在引用），如果线程是线程池中的线程（长期存活），value 永远不会被回收，造成内存泄漏。"
+  },
+  {
+    "id": "java-048",
+    "subcategory": "集合",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "HashSet 底层是如何实现的？",
+    "options": "[\"基于 TreeMap\", \"基于 HashMap\", \"基于 ArrayList\", \"基于 LinkedList\"]",
+    "answer": "基于 HashMap",
+    "explanation": "HashSet 底层使用 HashMap 实现，元素作为 HashMap 的 key，value 是一个固定的 Object 对象（PRESENT）。这说明了为什么 HashSet 元素不可重复、无序。"
+  },
+  {
+    "id": "java-049",
+    "subcategory": "Spring",
+    "type": "fill",
+    "difficulty": "hard",
+    "question": "Spring 中，Bean 的生命周期包括实例化 → 属性赋值 → ____ → 初始化 → 使用 → 销毁。",
+    "answer": "Aware 接口回调",
+    "explanation": "Spring Bean 生命周期：实例化 → 属性赋值 → 各种 Aware 回调（BeanNameAware, BeanFactoryAware, ApplicationContextAware）→ BeanPostProcessor 前置处理 → InitializingBean → init-method → BeanPostProcessor 后置处理 → 使用 → DisposableBean → destroy-method。"
+  },
+  {
+    "id": "java-050",
+    "subcategory": "MySQL",
+    "type": "choice",
+    "difficulty": "hard",
+    "question": "MySQL 执行一条 SELECT 语句的过程，正确的顺序是？",
+    "options": "[\"连接器 → 分析器 → 优化器 → 执行器 → 存储引擎\", \"分析器 → 连接器 → 优化器 → 执行器 → 存储引擎\", \"连接器 → 优化器 → 分析器 → 执行器 → 存储引擎\", \"执行器 → 连接器 → 分析器 → 优化器 → 存储引擎\"]",
+    "answer": "连接器 → 分析器 → 优化器 → 执行器 → 存储引擎",
+    "explanation": "MySQL 执行流程：① 连接器（建立连接、权限验证）→ ② 分析器（词法分析、语法分析）→ ③ 优化器（索引选择、执行计划）→ ④ 执行器（调用存储引擎接口）→ ⑤ 存储引擎（数据存取）。"
+  },
+  {
+    "id": "java-051",
+    "subcategory": "JVM",
+    "type": "fill",
+    "difficulty": "easy",
+    "question": "Java 的垃圾回收中，判断对象是否可回收的算法叫做 ____。",
+    "answer": "可达性分析算法",
+    "explanation": "Java 使用可达性分析算法判断对象是否可回收。从 GC Roots 出发，通过引用链遍历，不可达的对象被标记为可回收。另一种方式是引用计数法（Python 使用），但无法解决循环引用问题。"
+  },
+  {
+    "id": "java-052",
+    "subcategory": "并发",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "CountDownLatch 和 CyclicBarrier 的区别是？",
+    "options": "[\"CountDownLatch 可重复使用，CyclicBarrier 不可重复\", \"CountDownLatch 是减计数，一次性；CyclicBarrier 可重置重复使用\", \"两者完全一样\", \"CountDownLatch 用于线程间交换数据\"]",
+    "answer": "CountDownLatch 是减计数，一次性；CyclicBarrier 可重置重复使用",
+    "explanation": "CountDownLatch：减计数，一个/多个线程等待其他线程完成，计数到0后不可重置。CyclicBarrier：加计数，一组线程互相等待到达屏障点，可循环使用。Semaphore 控制并发访问数量。"
+  },
+  {
+    "id": "java-053",
+    "subcategory": "Spring",
+    "type": "choice",
+    "difficulty": "easy",
+    "question": "@RestController 注解相当于哪两个注解的组合？",
+    "options": "[\"@Controller + @ResponseBody\", \"@Service + @Controller\", \"@Component + @ResponseBody\", \"@Controller + @RequestMapping\"]",
+    "answer": "@Controller + @ResponseBody",
+    "explanation": "@RestController = @Controller + @ResponseBody。所有方法的返回值直接写入 HTTP 响应体（通常序列化为 JSON），不走视图解析器。"
+  },
+  {
+    "id": "java-054",
+    "subcategory": "Redis",
+    "type": "fill",
+    "difficulty": "hard",
+    "question": "Redis 集群中，当 Master 节点宕机后，集群的 ____ 机制会从 Slave 中选举新 Master。",
+    "answer": "哨兵",
+    "explanation": "Redis Sentinel（哨兵）负责监控主节点状态，当主节点宕机后自动进行故障转移（Failover），从从节点中选出新主节点。Redis Cluster 模式则是通过 Gossip 协议进行节点通信和故障检测。"
+  },
+  {
+    "id": "java-055",
+    "subcategory": "MySQL",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "以下 SQL 中，哪个会使用索引？假设 name 列有索引。",
+    "options": "[\"SELECT * FROM user WHERE name LIKE '%abc'\", \"SELECT * FROM user WHERE name LIKE 'abc%'\", \"SELECT * FROM user WHERE LEFT(name,3)='abc'\", \"SELECT * FROM user WHERE name + '' = 'abc'\"]",
+    "answer": "SELECT * FROM user WHERE name LIKE 'abc%'",
+    "explanation": "LIKE 'abc%' 是前缀匹配，可以使用索引。LIKE '%abc' 是后缀匹配，无法使用索引。对列使用函数（LEFT、+等）会导致索引失效。"
+  },
+  {
+    "id": "java-056",
+    "subcategory": "设计模式",
+    "type": "choice",
+    "difficulty": "easy",
+    "question": "策略模式 (Strategy Pattern) 的主要目的是？",
+    "options": "[\"保证一个类只有一个实例\", \"定义一系列算法并可以互相替换\", \"为对象动态添加功能\", \"简化复杂子系统的接口\"]",
+    "answer": "定义一系列算法并可以互相替换",
+    "explanation": "策略模式定义算法族，分别封装起来，让它们之间可以互相替换。例如支付策略（微信/支付宝）、排序策略等。单例是 Singleton，装饰器动态添加功能，外观简化接口。"
+  },
+  {
+    "id": "java-057",
+    "subcategory": "并发",
+    "type": "fill",
+    "difficulty": "easy",
+    "question": "Java 中，创建线程池推荐使用 ____ 类的构造方法，而不是 Executors 的静态工厂方法。",
+    "answer": "ThreadPoolExecutor",
+    "explanation": "阿里巴巴规范推荐使用 ThreadPoolExecutor 构造方法创建线程池，因为 Executors 的 newFixedThreadPool 和 newCachedThreadPool 使用无界队列，可能导致 OOM。"
+  },
+  {
+    "id": "java-058",
+    "subcategory": "网络",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "HTTPS 握手过程中，非对称加密用于哪个环节？",
+    "options": "[\"传输数据\", \"验证证书和交换对称密钥\", \"建立 TCP 连接\", \"DNS 解析\"]",
+    "answer": "验证证书和交换对称密钥",
+    "explanation": "HTTPS 握手阶段使用非对称加密（RSA/ECDHE）验证服务器证书和交换会话密钥，之后的数据传输使用对称加密（AES），因为对称加密速度更快。"
+  },
+  {
+    "id": "java-059",
+    "subcategory": "Linux",
+    "type": "choice",
+    "difficulty": "easy",
+    "question": "Linux 中，查看某个端口被哪个进程占用的命令是？",
+    "options": "[\"ps -ef\", \"netstat -anp | grep <端口>\", \"top\", \"df -h\"]",
+    "answer": "netstat -anp | grep <端口>",
+    "explanation": "netstat -anp 可查看端口占用及对应进程。也可用 lsof -i:<端口>、ss -tlnp | grep <端口>。ps 查看进程，top 动态监控系统资源，df 查看磁盘空间。"
+  },
+  {
+    "id": "java-060",
+    "subcategory": "综合",
+    "type": "choice",
+    "difficulty": "hard",
+    "question": "高并发场景下，扣减库存的正确姿势是？",
+    "options": "[\"先查询库存，判断充足后 UPDATE\", \"直接 UPDATE stock = stock - 1 WHERE stock > 0\", \"使用 Redis 缓存库存\", \"使用 synchronized 同步扣减方法\"]",
+    "answer": "直接 UPDATE stock = stock - 1 WHERE stock > 0",
+    "explanation": "先查后改会产生竞态条件。直接 UPDATE ... WHERE stock > 0 利用数据库行锁保证原子性。Redis 缓存库存 + Lua 脚本是更高性能方案。synchronized 在分布式环境下无效。"
+  }
+]

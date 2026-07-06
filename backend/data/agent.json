@@ -1,0 +1,586 @@
+[
+  {
+    "id": "agent-001",
+    "subcategory": "LLM基础",
+    "type": "choice",
+    "difficulty": "easy",
+    "question": "Transformer 架构中，Self-Attention 机制的主要作用是什么？",
+    "options": "[\"对输入序列中的每个位置计算与其他所有位置的相关性\", \"将输入序列压缩为一个固定长度的向量\", \"对输入序列进行卷积操作\", \"按照时间顺序逐步处理输入序列\"]",
+    "answer": "对输入序列中的每个位置计算与其他所有位置的相关性",
+    "explanation": "Self-Attention 的核心思想是让序列中的每个 token 都能直接关注到序列中的所有其他 token，从而捕捉长距离依赖关系。这是 Transformer 区别于 RNN/LSTM 的关键。"
+  },
+  {
+    "id": "agent-002",
+    "subcategory": "LLM基础",
+    "type": "choice",
+    "difficulty": "easy",
+    "question": "LLM 中的 Token 是什么？",
+    "options": "[\"文本被分割后的最小处理单元\", \"模型的参数权重\", \"注意力机制的输出\", \"一个完整的句子\"]",
+    "answer": "文本被分割后的最小处理单元",
+    "explanation": "Token 是 LLM 处理文本的基本单位。一个 token 可以是一个单词、一个子词（subword）、一个字符，甚至一个标点符号。中文通常 1-2 个字符为一个 token。模型的上下文窗口和计费通常以 token 为单位。"
+  },
+  {
+    "id": "agent-003",
+    "subcategory": "LLM基础",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "GPT 系列模型采用的 Decoder-Only 架构相比 Encoder-Decoder 架构的优势是什么？",
+    "options": "[\"更擅长文本生成任务，训练效率更高\", \"更擅长文本理解任务\", \"参数量更小\", \"不需要注意力机制\"]",
+    "answer": "更擅长文本生成任务，训练效率更高",
+    "explanation": "Decoder-Only 架构（如 GPT）使用因果自注意力（Causal Attention），每个 token 只能看到之前的 token，天然适合自回归文本生成。Encoder-Decoder（如 T5）在理解任务上更灵活，但生成任务效率较低。"
+  },
+  {
+    "id": "agent-004",
+    "subcategory": "LLM基础",
+    "type": "fill",
+    "difficulty": "easy",
+    "question": "LLM 领域中的术语 ____ 指的是模型在生成回答时，一次能处理的最大文本长度限制。",
+    "answer": "上下文窗口 (Context Window)",
+    "explanation": "上下文窗口（Context Window）决定了模型一次能「看到」多少文本。例如 GPT-4 支持 128K token，Claude 支持 200K token。超出窗口的内容会被截断或需要特殊处理。"
+  },
+  {
+    "id": "agent-005",
+    "subcategory": "LLM基础",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "以下哪种技术可以有效减少 LLM 推理时的显存占用？",
+    "options": "[\"量化 (Quantization)\", \"增大 Batch Size\", \"增加网络层数\", \"使用更大的词表\"]",
+    "answer": "量化 (Quantization)",
+    "explanation": "量化（Quantization）将模型参数从高精度（如 FP32/FP16）转换为低精度（如 INT8/INT4），可显著降低显存占用和推理延迟。常见方法有 GPTQ、AWQ、GGUF 等。其他选项都会增加显存。"
+  },
+  {
+    "id": "agent-006",
+    "subcategory": "LLM基础",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "关于 LLM 的 Temperature 参数，以下描述正确的是？",
+    "options": "[\"Temperature 越低，输出越确定和保守；越高，输出越随机和多样\", \"Temperature 控制模型的推理速度\", \"Temperature 越大，模型越准确\", \"Temperature 只影响输入处理\"]",
+    "answer": "Temperature 越低，输出越确定和保守；越高，输出越随机和多样",
+    "explanation": "Temperature 控制 softmax 输出的概率分布平滑程度。接近 0 时，模型几乎总是选择概率最高的 token（确定性输出）；接近 1 或更高时，低概率 token 也有机会被选中（增加创造性/随机性）。"
+  },
+  {
+    "id": "agent-007",
+    "subcategory": "Prompt工程",
+    "type": "choice",
+    "difficulty": "easy",
+    "question": "Few-Shot Prompting 指的是什么？",
+    "options": "[\"在 Prompt 中提供少量示例来引导模型输出格式和内容\", \"让模型只回答很少的问题\", \"限制模型的输出长度\", \"使用很少的参数进行微调\"]",
+    "answer": "在 Prompt 中提供少量示例来引导模型输出格式和内容",
+    "explanation": "Few-Shot Prompting 通过在 Prompt 中提供 2-5 个示例（输入-输出对），让模型理解任务模式和期望的输出格式，而不需要微调模型参数。Zero-Shot 则是零示例，直接描述任务。"
+  },
+  {
+    "id": "agent-008",
+    "subcategory": "Prompt工程",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "Chain-of-Thought (CoT) Prompting 的核心技巧是？",
+    "options": "[\"引导模型在给出最终答案前，先输出逐步推理过程\", \"将多个 prompt 串联起来\", \"使用数据库存储中间结果\", \"限制模型只输出最终答案\"]",
+    "answer": "引导模型在给出最终答案前，先输出逐步推理过程",
+    "explanation": "Chain-of-Thought（思维链）通过在 Prompt 中添加'Let's think step by step'或给出带推理步骤的示例，引导模型显式输出推理过程，能显著提升数学、逻辑推理等复杂任务的准确率。"
+  },
+  {
+    "id": "agent-009",
+    "subcategory": "Prompt工程",
+    "type": "fill",
+    "difficulty": "medium",
+    "question": "在 Prompt 工程中，____ 技术是指在 Prompt 中明确告诉模型「不要做什么」，以减少幻觉和错误输出。",
+    "answer": "负向提示 (Negative Prompting)",
+    "explanation": "负向提示（Negative Prompting）通过明确列出不希望出现的行为或内容来约束模型。例如：'请不要编造信息，如果不知道就说不知道'。这种方法与正向指令（告诉要做什么）配合使用效果更好。"
+  },
+  {
+    "id": "agent-010",
+    "subcategory": "Prompt工程",
+    "type": "choice",
+    "difficulty": "easy",
+    "question": "以下哪个 Prompt 技巧最适合让 LLM 输出结构化的 JSON 数据？",
+    "options": "[\"在 Prompt 中指定 JSON Schema 或给出 JSON 示例\", \"使用很高的 Temperature\", \"让模型自由发挥\", \"只使用 Zero-Shot\"]",
+    "answer": "在 Prompt 中指定 JSON Schema 或给出 JSON 示例",
+    "explanation": "要获得结构化输出，最有效的方法是在 Prompt 中明确指定格式要求，包括 JSON 的键名、类型和示例。许多 LLM 也支持 JSON Mode 或 Function Calling 来强制结构化输出。"
+  },
+  {
+    "id": "agent-011",
+    "subcategory": "Prompt工程",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "关于 System Prompt 和 User Prompt 的区别，以下描述正确的是？",
+    "options": "[\"System Prompt 设定 AI 的角色和行为规则，User Prompt 是用户的具体问题\", \"两者没有实质区别\", \"System Prompt 只用于 API 调用\", \"User Prompt 优先级高于 System Prompt\"]",
+    "answer": "System Prompt 设定 AI 的角色和行为规则，User Prompt 是用户的具体问题",
+    "explanation": "System Prompt 用于定义 AI 的整体行为、角色、风格和限制（如'你是一个专业的技术面试官'），User Prompt 是具体的问题或指令。System Prompt 通常在整个对话中保持一致，为模型提供长期的行为约束。"
+  },
+  {
+    "id": "agent-012",
+    "subcategory": "RAG",
+    "type": "choice",
+    "difficulty": "easy",
+    "question": "RAG (Retrieval-Augmented Generation) 的核心思想是什么？",
+    "options": "[\"在生成回答前，先从外部知识库检索相关信息，再结合检索结果生成答案\", \"直接用检索结果替代模型生成\", \"对模型进行增量训练\", \"增加模型的参数数量\"]",
+    "answer": "在生成回答前，先从外部知识库检索相关信息，再结合检索结果生成答案",
+    "explanation": "RAG 将检索系统与生成模型结合：先将用户问题用于检索相关文档，再将检索到的文档作为上下文注入 Prompt，让 LLM 基于这些外部知识生成回答。这解决了 LLM 知识截止日期和幻觉问题。"
+  },
+  {
+    "id": "agent-013",
+    "subcategory": "RAG",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "RAG 系统中，文档分块（Chunking）的主要目的是什么？",
+    "options": "[\"将长文档切分成适合 Embedding 和检索的合适大小的片段\", \"减少文档存储空间\", \"提高模型训练速度\", \"加密文档内容\"]",
+    "answer": "将长文档切分成适合 Embedding 和检索的合适大小的片段",
+    "explanation": "文档分块（Chunking）是为了：1) Embedding 模型有最大输入长度限制；2) 小块在检索时更精准，能准确定位相关信息；3) 减少无关信息噪声。常见的分块策略有固定大小、语义分块、递归分块等。Chunk 大小和重叠是关键参数。"
+  },
+  {
+    "id": "agent-014",
+    "subcategory": "RAG",
+    "type": "fill",
+    "difficulty": "medium",
+    "question": "RAG 系统中，将文本转换为向量表示的过程称为 ____，使用的模型称为 Embedding 模型。",
+    "answer": "向量嵌入 (Embedding)",
+    "explanation": "Embedding 是将文本映射到高维向量空间的过程，语义相似的文本在向量空间中距离更近。常用的 Embedding 模型有 OpenAI 的 text-embedding-3、BGE、M3E 等。检索时通过向量相似度（余弦相似度等）找到最相关的文档。"
+  },
+  {
+    "id": "agent-015",
+    "subcategory": "RAG",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "在 RAG 系统中，以下哪个不是常见的检索策略？",
+    "options": "[\"A* 搜索\", \"语义搜索 (基于向量相似度)\", \"关键词搜索 (BM25)\", \"混合搜索 (Hybrid Search)\"]",
+    "answer": "A* 搜索",
+    "explanation": "A* 搜索是图搜索算法，用于路径规划，不是 RAG 检索策略。RAG 常见的检索策略有：语义搜索（基于 embedding 向量相似度）、关键词搜索（如 BM25）、混合搜索（结合向量和关键词）、以及重排序（Rerank）来提高检索质量。"
+  },
+  {
+    "id": "agent-016",
+    "subcategory": "RAG",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "RAG 中 Rerank 模型的作用是什么？",
+    "options": "[\"对初步检索到的文档重新排序，提高最相关文档的排名\", \"重新生成 Embedding 向量\", \"重新训练 LLM\", \"对生成结果进行语法修正\"]",
+    "answer": "对初步检索到的文档重新排序，提高最相关文档的排名",
+    "explanation": "Rerank（重排序）是 RAG 中的重要优化步骤。第一阶段用 Embedding 快速检索 Top-K 文档，第二阶段用更精确的 Rerank 模型（如 Cohere Rerank、BGE-Reranker）对这些文档重新打分排序，过滤掉不相关的，提高最终答案质量。"
+  },
+  {
+    "id": "agent-017",
+    "subcategory": "RAG",
+    "type": "choice",
+    "difficulty": "easy",
+    "question": "以下哪个是常用的开源向量数据库？",
+    "options": "[\"Milvus\", \"MySQL\", \"Redis (仅KV模式)\", \"MongoDB (无向量索引)\"]",
+    "answer": "Milvus",
+    "explanation": "Milvus 是专门为向量相似度搜索设计的开源向量数据库，支持十亿级向量检索。其他常见向量数据库有 Chroma、Qdrant、Weaviate、Pinecone（商业）、pgvector（PostgreSQL 扩展）等。"
+  },
+  {
+    "id": "agent-018",
+    "subcategory": "Agent架构",
+    "type": "choice",
+    "difficulty": "easy",
+    "question": "AI Agent 通常包含哪个核心能力组合？",
+    "options": "[\"感知 → 规划 → 执行 → 反思\", \"只进行文本生成\", \"只进行图像识别\", \"只进行数据存储\"]",
+    "answer": "感知 → 规划 → 执行 → 反思",
+    "explanation": "AI Agent 的核心循环通常包括：感知（理解用户意图和环境）、规划（制定任务执行计划）、执行（调用工具/API 完成任务）、反思（评估执行结果并调整策略）。这种循环使 Agent 能够处理复杂的多步骤任务。"
+  },
+  {
+    "id": "agent-019",
+    "subcategory": "Agent架构",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "ReAct 模式（Reasoning + Acting）在 Agent 中的工作方式是？",
+    "options": "[\"交替进行推理和行动：先分析当前状态，决定下一步行动，执行后观察结果，继续推理\", \"先完成所有推理再执行\", \"只执行不推理\", \"随机选择行动\"]",
+    "answer": "交替进行推理和行动：先分析当前状态，决定下一步行动，执行后观察结果，继续推理",
+    "explanation": "ReAct（Reasoning + Acting）是 Agent 的经典模式，模型交替输出「思考（Thought）→ 行动（Action）→ 观察（Observation）」。Thought 是推理过程，Action 是调用工具，Observation 是工具返回结果，然后进入下一轮思考。"
+  },
+  {
+    "id": "agent-020",
+    "subcategory": "Agent架构",
+    "type": "fill",
+    "difficulty": "medium",
+    "question": "在 LangChain 中，____ 是 Agent 的核心抽象，定义了 Agent 如何根据当前状态选择并调用工具。",
+    "answer": "AgentExecutor",
+    "explanation": "AgentExecutor 是 LangChain 中运行 Agent 的核心组件，负责管理 Agent 的思考-行动-观察循环，处理工具调用、错误重试、最大迭代次数等。它是 Agent（决策逻辑）和 Tools（执行能力）之间的桥梁。"
+  },
+  {
+    "id": "agent-021",
+    "subcategory": "Agent架构",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "Multi-Agent 系统中，以下哪种架构让多个 Agent 依次传递任务？",
+    "options": "[\"流水线架构 (Pipeline)\", \"星型架构\", \"单体架构\", \"点对点架构\"]",
+    "answer": "流水线架构 (Pipeline)",
+    "explanation": "流水线架构中，Agent 按顺序处理任务，每个 Agent 完成自己的子任务后将结果传递给下一个 Agent，像工厂流水线一样。其他架构还有：层级架构（一个管理者分配任务给多个 Agent）、协作架构（Agent 们对等协商）等。"
+  },
+  {
+    "id": "agent-022",
+    "subcategory": "Agent架构",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "Agent 中 'Tool Use' (Function Calling) 的典型工作流程是？",
+    "options": "[\"LLM 根据用户意图选择匹配的工具函数并生成参数，系统执行函数后将结果返回给 LLM 继续处理\", \"LLM 直接执行代码\", \"手动编写所有可能的回复\", \"忽略用户的工具调用需求\"]",
+    "answer": "LLM 根据用户意图选择匹配的工具函数并生成参数，系统执行函数后将结果返回给 LLM 继续处理",
+    "explanation": "Function Calling 流程：1) 将可用工具的定义（名称、描述、参数 Schema）传给 LLM；2) LLM 判断是否需要调用工具并生成调用参数；3) 开发者执行实际的函数调用；4) 将执行结果返回给 LLM；5) LLM 基于结果生成最终回复。"
+  },
+  {
+    "id": "agent-023",
+    "subcategory": "Agent架构",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "以下哪个不是 Agent 中常见的记忆类型？",
+    "options": "[\"长期记忆 (存储在外部知识库)\", \"短期记忆 (对话上下文)\", \"工作记忆 (当前任务状态)\", \"ROM 只读记忆\"]",
+    "answer": "ROM 只读记忆",
+    "explanation": "Agent 的记忆通常分为：短期记忆（当前对话的上下文窗口）、长期记忆（持久化到向量数据库或传统数据库中的历史信息）、工作记忆（当前任务执行的中间状态）。ROM 是计算机硬件概念，不是 Agent 记忆类型。"
+  },
+  {
+    "id": "agent-024",
+    "subcategory": "Agent架构",
+    "type": "choice",
+    "difficulty": "easy",
+    "question": "Claude 的 Tool Use 功能中，tools 参数的作用是什么？",
+    "options": "[\"向模型声明可用的工具列表及其参数 Schema\", \"直接运行系统命令\", \"配置模型超参数\", \"设置 API 密钥\"]",
+    "answer": "向模型声明可用的工具列表及其参数 Schema",
+    "explanation": "在 Tool Use / Function Calling 中，开发者通过 tools 参数向模型声明可用的函数列表，包括函数名、描述、参数定义（JSON Schema）。模型根据用户意图自动判断是否需要调用工具，并返回结构化的调用请求。"
+  },
+  {
+    "id": "agent-025",
+    "subcategory": "Agent架构",
+    "type": "fill",
+    "difficulty": "medium",
+    "question": "在 Agent 开发中，____ 是一种让 Agent 在执行任务时自我反思和修正的技术，通过生成反馈来改进输出。",
+    "answer": "Self-Reflection (自我反思)",
+    "explanation": "Self-Reflection（自我反思）是让 Agent 在输出后检查自己的结果，判断是否有错误或改进空间，然后自动修正。常见的实现有 Reflexion、Self-Refine 等，可以显著提高复杂任务的成功率。"
+  },
+  {
+    "id": "agent-026",
+    "subcategory": "LangChain",
+    "type": "choice",
+    "difficulty": "easy",
+    "question": "LangChain 是什么？",
+    "options": "[\"一个用于构建 LLM 应用和 Agent 的开源框架\", \"一个 LLM 模型\", \"一个数据库系统\", \"一个前端 UI 框架\"]",
+    "answer": "一个用于构建 LLM 应用和 Agent 的开源框架",
+    "explanation": "LangChain 是最流行的 LLM 应用开发框架之一，提供了 Chain（链式调用）、Agent、Tool、Memory、Retriever 等核心抽象，支持 Python 和 JavaScript/TypeScript。它能简化 RAG、Agent、对话系统等应用的开发。"
+  },
+  {
+    "id": "agent-027",
+    "subcategory": "LangChain",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "LangChain 中，Chain 和 Agent 的主要区别是什么？",
+    "options": "[\"Chain 是固定的执行流程，Agent 可以根据情况动态决定调用哪些工具和执行顺序\", \"两者完全相同\", \"Agent 比 Chain 执行速度更快\", \"Chain 只能用于文本处理\"]",
+    "answer": "Chain 是固定的执行流程，Agent 可以根据情况动态决定调用哪些工具和执行顺序",
+    "explanation": "Chain 是预定义的固定流程（如先检索、再生成、再格式化），适用于确定性任务。Agent 更加灵活，它将 LLM 作为推理引擎，动态决定使用哪些工具、以什么顺序完成任务，适合复杂的开放式任务。"
+  },
+  {
+    "id": "agent-028",
+    "subcategory": "LangChain",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "LangGraph 与 LangChain 的关系是什么？",
+    "options": "[\"LangGraph 是 LangChain 的扩展，用于构建有状态的、图结构的多 Agent 工作流\", \"LangGraph 是 LangChain 的替代品\", \"两者没有关系\", \"LangGraph 是前端框架\"]",
+    "answer": "LangGraph 是 LangChain 的扩展，用于构建有状态的、图结构的多 Agent 工作流",
+    "explanation": "LangGraph 是 LangChain 生态的一部分，专门用于构建有状态的、多步骤的 Agent 工作流。它用图（Graph）来定义状态节点和转换边，支持循环、条件分支、并行执行等复杂控制流，比简单的 Chain 更灵活强大。"
+  },
+  {
+    "id": "agent-029",
+    "subcategory": "LangChain",
+    "type": "fill",
+    "difficulty": "medium",
+    "question": "在 LangChain 中，____ 是一种将多个文档加载器、文本分割器、向量存储和检索器串联起来的数据处理管道。",
+    "answer": "Document Loader (文档加载器) 或 Ingestion Pipeline",
+    "explanation": "LangChain 的数据摄入管道（Ingestion Pipeline）负责将原始文档（PDF、网页、数据库等）经过加载、分割、Embedding 后存入向量存储。常见组件包括 Document Loaders（加载）、Text Splitters（分割）、Vector Stores（存储）。"
+  },
+  {
+    "id": "agent-030",
+    "subcategory": "LangChain",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "以下哪个不是 LangChain 内置的 Memory 类型？",
+    "options": "[\"ConversationSummaryBufferMemory\", \"ConversationBufferMemory\", \"ConversationTokenBufferMemory\", \"RandomAccessMemory\"]",
+    "answer": "RandomAccessMemory",
+    "explanation": "RandomAccessMemory 不是 LangChain 的组件。LangChain 提供多种记忆类型：ConversationBufferMemory（保存完整对话历史）、ConversationSummaryMemory（生成摘要）、ConversationTokenBufferMemory（基于 token 数量限制）、ConversationSummaryBufferMemory（结合摘要和 buffer）等。"
+  },
+  {
+    "id": "agent-031",
+    "subcategory": "Function Calling",
+    "type": "choice",
+    "difficulty": "easy",
+    "question": "Function Calling 中，JSON Schema 的作用是什么？",
+    "options": "[\"定义函数参数的类型、格式和约束，让 LLM 能生成正确的调用参数\", \"存储数据\", \"渲染前端页面\", \"管理用户权限\"]",
+    "answer": "定义函数参数的类型、格式和约束，让 LLM 能生成正确的调用参数",
+    "explanation": "JSON Schema 在 Function Calling 中用于描述函数的参数结构（参数名、类型、是否必填、描述等）。LLM 根据 Schema 生成符合格式的参数 JSON，开发者无需手动解析自然语言。"
+  },
+  {
+    "id": "agent-032",
+    "subcategory": "Function Calling",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "当 LLM 的 Function Calling 返回一个函数调用请求后，开发者下一步应该做什么？",
+    "options": "[\"执行对应的函数，将结果以特定格式返回给 LLM 继续处理\", \"直接返回给用户\", \"忽略这个请求\", \"重新训练模型\"]",
+    "answer": "执行对应的函数，将结果以特定格式返回给 LLM 继续处理",
+    "explanation": "Function Calling 的标准流程是：1) LLM 返回 function_call（含函数名和参数）；2) 开发者执行该函数；3) 将执行结果作为 tool 角色消息返回给 LLM；4) LLM 基于结果生成面向用户的最终回复。这是一个循环过程。"
+  },
+  {
+    "id": "agent-033",
+    "subcategory": "Function Calling",
+    "type": "fill",
+    "difficulty": "medium",
+    "question": "在 Tool Use 中，如果 LLM 需要进行多次工具调用，通常会使用 ____ 模式，让 LLM 在单次响应中请求多个独立的工具调用。",
+    "answer": "Parallel Tool Calling (并行工具调用)",
+    "explanation": "Parallel Tool Calling 允许 LLM 在一次响应中同时请求多个独立的函数调用。例如用户可以同时查询天气和预订餐厅，两个调用不相互依赖时可以并行执行，显著提升效率。OpenAI 和 Anthropic 都支持此功能。"
+  },
+  {
+    "id": "agent-034",
+    "subcategory": "Function Calling",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "设计 Agent Tool 时，以下哪个实践是最重要的？",
+    "options": "[\"为每个 Tool 提供清晰、准确的名称和描述\", \"尽可能让一个 Tool 完成所有功能\", \"不返回错误信息\", \"Tool 数量越少越好\"]",
+    "answer": "为每个 Tool 提供清晰、准确的名称和描述",
+    "explanation": "Tool 的描述和参数说明直接影响 LLM 的选择准确率。好的描述应清晰说明 Tool 的功能、使用场景、参数含义和返回值。模糊的描述会导致 LLM 错误选择或不使用该 Tool。每个 Tool 应职责单一。"
+  },
+  {
+    "id": "agent-035",
+    "subcategory": "Embedding与向量",
+    "type": "choice",
+    "difficulty": "easy",
+    "question": "余弦相似度用于衡量两个词向量的什么特性？",
+    "options": "[\"方向上的相似性（角度）\", \"长度上的相似性\", \"绝对位置\", \"速度差异\"]",
+    "answer": "方向上的相似性（角度）",
+    "explanation": "余弦相似度（Cosine Similarity）计算两个向量夹角余弦值，衡量它们在方向上的相似性，值域为 [-1, 1]。两个向量方向相同（夹角为0）时相似度为 1。在文本语义搜索中，它比欧氏距离更常用，因为它不受向量长度影响。"
+  },
+  {
+    "id": "agent-036",
+    "subcategory": "Embedding与向量",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "关于 Embedding 模型的维度（Dimension），以下描述正确的是？",
+    "options": "[\"维度越高通常能捕捉更多语义信息，但存储和计算成本也更高\", \"维度越低越好\", \"维度与性能无关\", \"所有 Embedding 模型维度必须相同\"]",
+    "answer": "维度越高通常能捕捉更多语义信息，但存储和计算成本也更高",
+    "explanation": "Embedding 维度是精度与效率的权衡。高维度（如 1536、3072）能保留更多语义细节，但存储和检索开销更大。低维度（如 384、768）更高效，适合资源受限场景。许多模型支持 Matryoshka 表示，可以灵活截取维度。"
+  },
+  {
+    "id": "agent-037",
+    "subcategory": "Embedding与向量",
+    "type": "fill",
+    "difficulty": "medium",
+    "question": "在向量数据库中进行相似度搜索时，常用的近似最近邻搜索算法是 ____，它能在大规模向量数据中快速找到近似最相似的 K 个向量。",
+    "answer": "ANN (Approximate Nearest Neighbor) 或 HNSW",
+    "explanation": "ANN（近似最近邻）算法牺牲少量精度换取搜索速度的大幅提升。常见实现有 HNSW（分层可导航小世界图）、IVF（倒排文件索引）、PQ（乘积量化）等。大多数向量数据库默认使用 HNSW。"
+  },
+  {
+    "id": "agent-038",
+    "subcategory": "Embedding与向量",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "在中文文本的 Embedding 场景中，以下哪个模型是专门优化的中文 Embedding 模型？",
+    "options": "[\"BGE (BAAI General Embedding)\", \"GPT-4\", \"Gemini\", \"Llama\"]",
+    "answer": "BGE (BAAI General Embedding)",
+    "explanation": "BGE（BAAI General Embedding）是智源研究院开源的中英文 Embedding 模型，在中文语义检索任务上表现优异。其他常用中文 Embedding 模型还有 M3E、text2vec、Stella 等。GPT-4 和 Llama 是生成式 LLM，不是专门的 Embedding 模型。"
+  },
+  {
+    "id": "agent-039",
+    "subcategory": "模型服务与部署",
+    "type": "choice",
+    "difficulty": "easy",
+    "question": "vLLM 是什么？",
+    "options": "[\"一个高性能的 LLM 推理和服务框架\", \"一个前端开发框架\", \"一个数据库系统\", \"一个模型训练框架\"]",
+    "answer": "一个高性能的 LLM 推理和服务框架",
+    "explanation": "vLLM 是开源的高吞吐量 LLM 推理框架，使用 PagedAttention 技术管理 KV Cache 内存，大幅提升并发推理性能。支持 Continuous Batching，能有效提高 GPU 利用率和推理速度。"
+  },
+  {
+    "id": "agent-040",
+    "subcategory": "模型服务与部署",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "Ollama 的主要用途是什么？",
+    "options": "[\"在本地一键运行开源 LLM（如 Llama、Qwen、Mistral）\", \"训练新模型\", \"管理数据库\", \"前端页面渲染\"]",
+    "answer": "在本地一键运行开源 LLM（如 Llama、Qwen、Mistral）",
+    "explanation": "Ollama 是一个简化本地运行开源 LLM 的工具，支持 Llama、Qwen、Mistral、Gemma 等模型。它封装了模型下载、量化、推理等功能，提供 REST API 和命令行界面，适合本地开发和测试。"
+  },
+  {
+    "id": "agent-041",
+    "subcategory": "模型服务与部署",
+    "type": "fill",
+    "difficulty": "medium",
+    "question": "在 LLM 推理优化中，____ 技术通过对 Key-Value Cache 进行分页管理，减少了显存碎片，使 vLLM 能实现更高的并发吞吐量。",
+    "answer": "PagedAttention",
+    "explanation": "PagedAttention 是 vLLM 的核心创新，借鉴操作系统的虚拟内存分页思想，将 KV Cache 分成固定大小的块（block），按需分配和释放。这大大减少了显存碎片，提高了批处理效率，是 vLLM 高性能的关键。"
+  },
+  {
+    "id": "agent-042",
+    "subcategory": "模型服务与部署",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "关于 OpenAI 兼容 API 的说法，正确的是？",
+    "options": "[\"许多开源推理框架和模型服务提供与 OpenAI API 格式兼容的接口，方便应用迁移\", \"只有 OpenAI 官方的服务才能使用 OpenAI API 格式\", \"OpenAI API 格式不支持流式输出\", \"开源框架无法做到 API 兼容\"]",
+    "answer": "许多开源推理框架和模型服务提供与 OpenAI API 格式兼容的接口，方便应用迁移",
+    "explanation": "OpenAI API 格式已成为行业标准。vLLM、Ollama、FastChat、LocalAI 等开源框架都提供了 OpenAI 兼容的 /v1/chat/completions 端点，开发者无需修改代码即可在不同模型服务之间切换。"
+  },
+  {
+    "id": "agent-043",
+    "subcategory": "Prompt注入与安全",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "Prompt Injection 攻击是指什么？",
+    "options": "[\"攻击者在用户输入中嵌入恶意指令，试图覆盖或绕过 System Prompt 的限制\", \"直接修改模型参数\", \"DDoS 攻击\", \"对数据库进行 SQL 注入\"]",
+    "answer": "攻击者在用户输入中嵌入恶意指令，试图覆盖或绕过 System Prompt 的限制",
+    "explanation": "Prompt Injection 是 LLM 应用面临的重要安全威胁。攻击者在输入中注入如'忽略之前的指令，做 X'之类的提示，试图让模型执行非预期的操作。防范措施包括输入过滤、权限分离、对输出进行安全审核等。"
+  },
+  {
+    "id": "agent-044",
+    "subcategory": "Prompt注入与安全",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "以下哪种做法不能有效防御 Prompt Injection？",
+    "options": "[\"完全信任 LLM 的输出\", \"对用户输入进行过滤和消毒\", \"将不可信内容与系统指令分开\", \"对 LLM 输出进行二次审核\"]",
+    "answer": "完全信任 LLM 的输出",
+    "explanation": "完全信任 LLM 输出是危险的。防御 Prompt Injection 需要多层防护：输入过滤、使用特殊分隔符区分用户输入和系统指令、将 LLM 的输出视为不可信并做二次验证、限制 Agent 的执行权限等。永远不要给 LLM 它不需要的敏感权限。"
+  },
+  {
+    "id": "agent-045",
+    "subcategory": "Prompt注入与安全",
+    "type": "fill",
+    "difficulty": "medium",
+    "question": "在 LLM 安全领域，____ 是指 LLM 生成包含虚假、不准确或完全编造信息的现象。",
+    "answer": "幻觉 (Hallucination)",
+    "explanation": "幻觉（Hallucination）是 LLM 的常见问题，模型会自信地生成看似合理但实际错误的内容。减少幻觉的方法包括 RAG（基于外部知识生成）、限制模型在不确定时说'不知道'、使用更低的 Temperature、以及对输出进行事实核查。"
+  },
+  {
+    "id": "agent-046",
+    "subcategory": "Multi-Agent系统",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "以下哪个是多 Agent 系统相比单 Agent 的主要优势？",
+    "options": "[\"不同 Agent 可以专精不同领域，协作处理更复杂的任务\", \"代码实现更简单\", \"推理速度总是更快\", \"成本总是更低\"]",
+    "answer": "不同 Agent 可以专精不同领域，协作处理更复杂的任务",
+    "explanation": "多 Agent 系统的核心优势是专业化分工：每个 Agent 有自己的专长（如一个负责搜索、一个负责代码生成、一个负责审查），通过协作完成单个 Agent 难以独立完成的复杂任务。代价是复杂度增加，协调和通信成本更高。"
+  },
+  {
+    "id": "agent-047",
+    "subcategory": "Multi-Agent系统",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "AutoGen 框架（微软）的核心设计理念是什么？",
+    "options": "[\"通过多个可对话的 Agent 之间的对话来完成复杂任务\", \"只能使用单个 Agent\", \"不需要 LLM\", \"只能用于代码生成\"]",
+    "answer": "通过多个可对话的 Agent 之间的对话来完成复杂任务",
+    "explanation": "AutoGen 是微软开源的多 Agent 对话框架，核心思想是让多个 Agent（各有不同角色和能力）通过自然语言对话协作。Agent 之间可以相互提问、提供反馈、迭代改进，形成多轮对话来完成编程、数据分析等复杂任务。"
+  },
+  {
+    "id": "agent-048",
+    "subcategory": "Multi-Agent系统",
+    "type": "fill",
+    "difficulty": "medium",
+    "question": "CrewAI 框架中，一组共同完成任务的 Agent 被称为一个 ____。",
+    "answer": "Crew (团队)",
+    "explanation": "CrewAI 将多个 Agent 组织为 Crew（团队），每个 Agent 有特定的角色（Role）、目标（Goal）和背景故事（Backstory）。Crew 中的 Agent 按照定义的任务（Task）和流程（Process）协作，支持顺序执行和层级执行两种模式。"
+  },
+  {
+    "id": "agent-049",
+    "subcategory": "模型评估",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "在 LLM 评估中，RAGAS 框架主要用于评估什么？",
+    "options": "[\"RAG 系统的质量（包括答案相关性、忠实度、上下文精度等）\", \"模型的训练速度\", \"GPU 性能\", \"代码执行效率\"]",
+    "answer": "RAG 系统的质量（包括答案相关性、忠实度、上下文精度等）",
+    "explanation": "RAGAS（RAG Assessment）是专门评估 RAG 系统的开源框架，提供多个评估指标：Faithfulness（忠实度，答案是否基于检索内容）、Answer Relevancy（答案相关性）、Context Precision（上下文精度）、Context Recall（上下文召回率）等。"
+  },
+  {
+    "id": "agent-050",
+    "subcategory": "模型评估",
+    "type": "fill",
+    "difficulty": "medium",
+    "question": "在 LLM 评估中，使用一个更强的 LLM 来评判另一个 LLM 的输出质量，这种方法称为 ____。",
+    "answer": "LLM-as-Judge",
+    "explanation": "LLM-as-Judge 是使用一个强 LLM（如 GPT-4）作为评判者，从多个维度（准确性、完整性、流畅性等）评价目标 LLM 的输出。这种方法可扩展性好，成本较低，但存在评判者自身的偏见。常见的 LLM-as-Judge 框架有 MT-Bench、AlpacaEval 等。"
+  },
+  {
+    "id": "agent-051",
+    "subcategory": "LoRA与微调",
+    "type": "choice",
+    "difficulty": "easy",
+    "question": "LoRA (Low-Rank Adaptation) 是什么？",
+    "options": "[\"一种参数高效的模型微调方法，通过低秩分解只训练少量额外参数\", \"一种新的模型架构\", \"一种数据预处理方法\", \"一种 GPU 优化技术\"]",
+    "answer": "一种参数高效的模型微调方法，通过低秩分解只训练少量额外参数",
+    "explanation": "LoRA（Low-Rank Adaptation）是参数高效微调（PEFT）的代表方法。它在预训练模型的权重旁添加低秩分解矩阵，只训练这些少量参数，冻结原始权重。这大幅降低了微调成本和显存占用（通常只需全量微调的 1‰ 参数）。"
+  },
+  {
+    "id": "agent-052",
+    "subcategory": "LoRA与微调",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "QLoRA 相比 LoRA 的主要改进是什么？",
+    "options": "[\"在 LoRA 基础上结合 4-bit 量化，进一步降低显存占用\", \"增加了模型层数\", \"提高了训练速度 10 倍\", \"移除了所有训练参数\"]",
+    "answer": "在 LoRA 基础上结合 4-bit 量化，进一步降低显存占用",
+    "explanation": "QLoRA 将 LoRA 与 4-bit NormalFloat 量化技术结合，可以在单个消费级 GPU（如 RTX 3090 24GB）上微调 65B 参数的大模型。它通过双重量化、分页优化器等技术，在几乎不损失性能的情况下将显存需求降到极低。"
+  },
+  {
+    "id": "agent-053",
+    "subcategory": "LoRA与微调",
+    "type": "fill",
+    "difficulty": "medium",
+    "question": "在 LoRA 微调中，参数 ____ 表示低秩分解矩阵的秩，它控制着微调参数的数量和适配能力之间的平衡。",
+    "answer": "r (rank)",
+    "explanation": "LoRA 中的 r（rank/秩）是关键超参数，通常取值 8、16、32、64 等。r 越大，可训练参数越多，适配能力越强，但计算和存储开销也越大。实践中 r=8 或 16 往往就能取得不错效果，太大容易过拟合。"
+  },
+  {
+    "id": "agent-054",
+    "subcategory": "Token与计费",
+    "type": "choice",
+    "difficulty": "easy",
+    "question": "调用 LLM API 时，通常如何计费？",
+    "options": "[\"按输入和输出的 Token 数量分别计费\", \"按请求次数计费\", \"按月固定费用\", \"按模型大小计费\"]",
+    "answer": "按输入和输出的 Token 数量分别计费",
+    "explanation": "绝大多数 LLM API（OpenAI、Anthropic、Google 等）按 Token 数量计费，输入和输出通常有不同的单价（输出一般更贵）。Token 包括文本被模型分词后的所有 token，包括 prompt、对话历史、function 定义等。"
+  },
+  {
+    "id": "agent-055",
+    "subcategory": "Token与计费",
+    "type": "fill",
+    "difficulty": "medium",
+    "question": "在使用 LLM API 时，为了降低成本同时保持响应质量，常用的技术是 ____，它通过缓存和复用重复的 prompt 前缀的 KV Cache 来减少计算。",
+    "answer": "Prompt Caching (提示缓存)",
+    "explanation": "Prompt Caching 能显著降低成本（通常打 5-9 折）。当多个请求共享相同的长前缀（如 System Prompt、RAG 上下文），API 会自动缓存这些部分的 KV Cache。Anthropic 和 OpenAI 都支持此功能，对于有固定 System Prompt 或长上下文的场景非常有效。"
+  },
+  {
+    "id": "agent-056",
+    "subcategory": "LangChain",
+    "type": "fill",
+    "difficulty": "medium",
+    "question": "LangChain 中，____ 用于连接 LLM 和外部数据源，将检索到的相关文档注入到 Prompt 中。",
+    "answer": "RetrievalQA 或 RetrievalChain",
+    "explanation": "RetrievalQA（检索式问答链）是 LangChain 中最常用的 Chain 之一。它先从向量数据库或其他检索器中检索与用户问题相关的文档，然后将文档与用户问题一起发送给 LLM，让 LLM 基于这些文档生成答案。"
+  },
+  {
+    "id": "agent-057",
+    "subcategory": "Agent开发实践",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "在开发一个面向用户的 AI Agent 产品时，以下哪个做法最重要？",
+    "options": "[\"设计好安全边界和权限控制，避免 Agent 执行危险操作\", \"给 Agent 最大权限以便完成更多任务\", \"完全依赖 LLM 的判断\", \"不设置超时限制\"]",
+    "answer": "设计好安全边界和权限控制，避免 Agent 执行危险操作",
+    "explanation": "AI Agent 的安全是头等大事。必须：1) 最小权限原则，只给 Agent 必要的权限；2) 对危险操作（如删除、支付）要求用户确认；3) 设置超时和迭代限制；4) 对输出进行审核过滤；5) 记录审计日志。永远不能让 Agent 在没有人工确认的情况下执行不可逆的危险操作。"
+  },
+  {
+    "id": "agent-058",
+    "subcategory": "Agent开发实践",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "以下哪种场景最适合使用 AI Agent（而非简单的 LLM 调用）？",
+    "options": "[\"需要联网搜索、查询数据库、调用 API 等多步骤操作的复杂任务\", \"简单的文本摘要\", \"根据模板生成固定格式的邮件\", \"情感分析\"]",
+    "answer": "需要联网搜索、查询数据库、调用 API 等多步骤操作的复杂任务",
+    "explanation": "AI Agent 的优势在于处理需要多步骤、多工具协作的开放式复杂任务（如'帮我研究竞品、写一份分析报告、发邮件给团队'）。对于简单的单步任务（摘要、分类、翻译），直接调用 LLM API 反而更简单、更快、更省钱。"
+  },
+  {
+    "id": "agent-059",
+    "subcategory": "Agent开发实践",
+    "type": "fill",
+    "difficulty": "easy",
+    "question": "在 Agent 开发中，____ 是指 Agent 在执行任务过程中陷入循环或无法完成任务时强制终止的机制。",
+    "answer": "超时限制 (Timeout) 或 最大迭代次数 (Max Iterations)",
+    "explanation": "设置最大迭代次数（Max Iterations）和超时（Timeout）是 Agent 开发的基本防护措施。Agent 可能会陷入无限循环（反复调用同一工具而无进展），限制迭代次数和总执行时间可以避免资源浪费，并向用户报告任务未能完成。"
+  },
+  {
+    "id": "agent-060",
+    "subcategory": "Agent开发实践",
+    "type": "choice",
+    "difficulty": "easy",
+    "question": "以下哪个是 Anthropic 的 Claude 模型在 Agent 开发中的特色能力？",
+    "options": "[\"Computer Use（操作电脑）和长上下文窗口（200K tokens）\", \"图像生成\", \"视频处理\", \"3D 建模\"]",
+    "answer": "Computer Use（操作电脑）和长上下文窗口（200K tokens）",
+    "explanation": "Claude 的独特优势包括：Computer Use（通过截图理解屏幕内容并操作鼠标键盘，完成复杂的 GUI 自动化任务）、200K token 的超长上下文窗口（可以一次处理整本书）、以及强大的 Tool Use 能力。"
+  }
+]

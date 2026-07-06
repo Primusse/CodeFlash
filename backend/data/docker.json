@@ -1,0 +1,118 @@
+[
+  {
+    "id": "docker-001",
+    "subcategory": "基础概念",
+    "type": "choice",
+    "difficulty": "easy",
+    "question": "Docker 的核心三要素不包括以下哪个？",
+    "options": "[\"镜像 (Image)\", \"容器 (Container)\", \"仓库 (Registry)\", \"虚拟机 (VM)\"]",
+    "answer": "虚拟机 (VM)",
+    "explanation": "Docker 核心三要素是镜像、容器和仓库。Docker 是容器化技术，虚拟化到操作系统层而非硬件层，虚拟机不在其核心概念中。"
+  },
+  {
+    "id": "docker-002",
+    "subcategory": "基础概念",
+    "type": "choice",
+    "difficulty": "easy",
+    "question": "以下哪个命令用于列出本地所有镜像？",
+    "options": "[\"docker ps\", \"docker image ls\", \"docker images\", \"docker image ls 和 docker images 都可以\"]",
+    "answer": "docker image ls 和 docker images 都可以",
+    "explanation": "docker images 和 docker image ls 效果相同，都列出本地镜像。docker ps 列出容器，docker image ls 是 docker images 的新版写法。"
+  },
+  {
+    "id": "docker-003",
+    "subcategory": "基础概念",
+    "type": "fill",
+    "difficulty": "easy",
+    "question": "Docker 中，____ 是镜像的运行实例，可以看作是一个轻量级的沙盒。",
+    "answer": "容器",
+    "explanation": "容器 (Container) 是镜像 (Image) 的运行实例，每个容器相互隔离，拥有自己的文件系统、网络和进程空间。"
+  },
+  {
+    "id": "docker-004",
+    "subcategory": "Dockerfile",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "以下 Dockerfile 指令中，哪个用于设置容器启动时执行的默认命令，但可以被 docker run 后的命令覆盖？",
+    "options": "[\"RUN\", \"ENTRYPOINT\", \"CMD\", \"EXEC\"]",
+    "answer": "CMD",
+    "explanation": "CMD 指定容器启动时的默认命令，可被 docker run 后的参数覆盖。ENTRYPOINT 指定的命令不可被覆盖（除非加 --entrypoint 显式覆盖），通常作为主进程。RUN 在构建时执行。"
+  },
+  {
+    "id": "docker-005",
+    "subcategory": "Dockerfile",
+    "type": "fill",
+    "difficulty": "medium",
+    "question": "Dockerfile 中使用 ____ 指令将宿主机文件复制到镜像中，且推荐优先使用它而非 ADD。",
+    "answer": "COPY",
+    "explanation": "COPY 仅复制本地文件到镜像，语义清晰。ADD 虽然功能更多（支持 URL 下载和 tar 自动解压），但行为不透明，官方推荐优先使用 COPY。"
+  },
+  {
+    "id": "docker-006",
+    "subcategory": "容器管理",
+    "type": "choice",
+    "difficulty": "easy",
+    "question": "以下哪个命令可以查看正在运行的容器日志？",
+    "options": "[\"docker logs\", \"docker status\", \"docker info\", \"docker inspect\"]",
+    "answer": "docker logs",
+    "explanation": "docker logs <容器名> 查看容器标准输出日志。docker status 不存在，docker info 显示 Docker 系统信息，docker inspect 查看容器/镜像详细配置。"
+  },
+  {
+    "id": "docker-007",
+    "subcategory": "容器管理",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "要进入一个正在运行的容器内部执行 bash，应该使用哪个命令？",
+    "options": "[\"docker attach\", \"docker exec -it\", \"docker ssh\", \"docker enter\"]",
+    "answer": "docker exec -it",
+    "explanation": "docker exec -it <容器名> /bin/bash 在新进程中执行命令并交互。docker attach 附加到容器主进程的终端，docker ssh 不存在，docker enter 不存在。"
+  },
+  {
+    "id": "docker-008",
+    "subcategory": "网络",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "默认情况下，docker-compose 会为所有服务创建一个____网络，服务之间可通过服务名互相访问。",
+    "options": "[\"host\", \"none\", \"bridge\", \"overlay\"]",
+    "answer": "bridge",
+    "explanation": "docker-compose 默认创建 bridge 网络，同一 compose 文件中的服务自动加入该网络，可通过服务名（DNS 解析）互相通信。overlay 用于跨主机的 Swarm 集群。"
+  },
+  {
+    "id": "docker-009",
+    "subcategory": "数据管理",
+    "type": "choice",
+    "difficulty": "medium",
+    "question": "Docker 中，____ 是由 Docker 完全管理的持久化存储，存储在宿主机特定目录下，适合在不同容器间共享数据。",
+    "options": "[\"Bind Mount\", \"Volume\", \"tmpfs\", \"Cache Mount\"]",
+    "answer": "Volume",
+    "explanation": "Volume 由 Docker 管理（/var/lib/docker/volumes/），与宿主机路径解耦，跨平台一致，推荐用于持久化数据。Bind Mount 依赖宿主机具体路径，tmpfs 是内存临时存储。"
+  },
+  {
+    "id": "docker-010",
+    "subcategory": "镜像优化",
+    "type": "fill",
+    "difficulty": "hard",
+    "question": "为了减小 Docker 镜像体积，通常采用____构建模式：第一阶段编译代码，第二阶段只复制编译产物到精简基础镜像中。",
+    "answer": "多阶段",
+    "explanation": "多阶段构建 (Multi-stage Build) 在一个 Dockerfile 中使用多个 FROM 指令，构建阶段用完整工具链编译，运行阶段只复制产物（如二进制文件）到 alpine 等精简镜像，大幅减小最终镜像体积。"
+  },
+  {
+    "id": "docker-011",
+    "subcategory": "镜像优化",
+    "type": "choice",
+    "difficulty": "hard",
+    "question": "为了利用 Docker 的构建缓存加速，以下哪个做法是正确的？",
+    "options": "[\"先 COPY 全部源码再 RUN npm install\", \"先 COPY package.json 再 RUN npm install，最后 COPY 其余源码\", \"将所有命令写在一个 RUN 里\", \"在 .dockerignore 中排除 node_modules\"]",
+    "answer": "先 COPY package.json 再 RUN npm install，最后 COPY 其余源码",
+    "explanation": "Docker 构建缓存以层为单位：如果 COPY 的内容未变，后续层可复用缓存。先复制依赖文件（package.json）并安装，再复制源码，这样修改源码时不会重新安装依赖。"
+  },
+  {
+    "id": "docker-012",
+    "subcategory": "Dockerfile",
+    "type": "fill",
+    "difficulty": "easy",
+    "question": "Dockerfile 指令 ____ 用于声明容器运行时监听的网络端口，但不会实际发布端口。",
+    "answer": "EXPOSE",
+    "explanation": "EXPOSE 是文档性质指令，声明容器打算使用的端口，不会自动映射到宿主机。真正发布端口需要用 docker run -p 或 docker-compose 的 ports 配置。"
+  }
+]

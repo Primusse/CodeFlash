@@ -1,0 +1,18 @@
+# Dependencies
+node_modules/
+backend/codeflash.exe
+
+# Build output
+frontend/dist/
+
+# Database
+backend/data/codeflash.db
+
+# IDE
+.vscode/
+.idea/
+.DS_Store
+
+# Env
+.env
+.env.local
