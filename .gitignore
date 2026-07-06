@@ -12,7 +12,12 @@ backend/data/codeflash.db
 .vscode/
 .idea/
 .DS_Store
+.claude/
 
 # Env
 .env
 .env.local
+
+#docs
+/help.md
+/docker-compose.prod.yml
