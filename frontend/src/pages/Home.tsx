@@ -61,21 +61,21 @@ export default function Home() {
   const meta = CATEGORY_META[selectedCategory] || DEFAULT_META
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 md:space-y-8">
       {/* Hero */}
       <div className="text-center">
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">
+        <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
           编程知识刷题工具
         </h1>
-        <p className="text-gray-500">
+        <p className="text-sm md:text-base text-gray-500">
           选择分类，开始刷题，巩固你的后端开发和 AI Agent 知识
         </p>
       </div>
 
       {/* Category Selection */}
       <section>
-        <h2 className="text-lg font-semibold text-gray-700 mb-3">选择分类</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <h2 className="text-base md:text-lg font-semibold text-gray-700 mb-3">选择分类</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-3">
           {categories.map((info) => {
             const meta = CATEGORY_META[info.category] || DEFAULT_META
             const isSelected = selectedCategory === info.category
@@ -83,28 +83,30 @@ export default function Home() {
               <button
                 key={info.category}
                 onClick={() => setSelectedCategory(info.category)}
-                className={`card text-left transition-all cursor-pointer ${
+                className={`card text-left transition-all duration-200 active:scale-[0.98] ${
                   isSelected
-                    ? 'ring-2 ring-primary-500 ring-offset-2'
+                    ? 'ring-2 ring-primary-500 ring-offset-2 shadow-md'
                     : 'hover:ring-1 hover:ring-gray-200'
                 }`}
               >
                 <div className="flex items-center gap-3 mb-3">
-                  <span className="text-3xl">{meta.icon}</span>
-                  <div>
-                    <h3 className="font-bold text-gray-800">{info.name || info.category}</h3>
-                    <p className="text-xs text-gray-400">{meta.desc}</p>
+                  <span className="text-2xl md:text-3xl">{meta.icon}</span>
+                  <div className="min-w-0">
+                    <h3 className="font-bold text-gray-800 text-sm md:text-base">
+                      {info.name || info.category}
+                    </h3>
+                    <p className="text-xs text-gray-400 hidden sm:block">{meta.desc}</p>
                   </div>
                 </div>
-                <div className="flex gap-2 text-xs">
-                  <span className="bg-blue-50 text-blue-600 px-2 py-0.5 rounded">
+                <div className="flex gap-1.5 flex-wrap text-xs">
+                  <span className="bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full">
                     共 {info.total_count} 题
                   </span>
-                  <span className="bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded">
+                  <span className="bg-emerald-50 text-emerald-600 px-2 py-0.5 rounded-full">
                     已答 {info.answered_count}
                   </span>
                   {info.answered_count > 0 && (
-                    <span className="bg-purple-50 text-purple-600 px-2 py-0.5 rounded">
+                    <span className="bg-purple-50 text-purple-600 px-2 py-0.5 rounded-full">
                       正确率 {Math.round((info.correct_count / info.answered_count) * 100)}%
                     </span>
                   )}
@@ -118,25 +120,25 @@ export default function Home() {
       {/* Quiz Config */}
       {cat && meta && (
         <section className="card">
-          <h2 className="text-lg font-semibold text-gray-700 mb-4">开始刷题</h2>
+          <h2 className="text-base md:text-lg font-semibold text-gray-700 mb-4">开始刷题</h2>
           <div className="space-y-4">
             {/* Question count */}
             <div>
               <label className="block text-sm font-medium text-gray-600 mb-2">
                 题目数量
               </label>
-              <div className="flex gap-2">
+              <div className="flex gap-2 flex-wrap">
                 {[5, 10, 15, 20, 30].map((n) => (
                   <button
                     key={n}
                     onClick={() => setQuestionCount(n)}
-                    className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 active:scale-95 ${
                       questionCount === n
-                        ? 'bg-primary-600 text-white'
+                        ? 'bg-primary-600 text-white shadow-sm'
                         : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                     }`}
                   >
-                    {n}
+                    {n} 题
                   </button>
                 ))}
               </div>
@@ -147,7 +149,7 @@ export default function Home() {
               <label className="block text-sm font-medium text-gray-600 mb-2">
                 题型
               </label>
-              <div className="flex gap-2">
+              <div className="flex gap-2 flex-wrap">
                 {[
                   { value: 'all', label: '全部' },
                   { value: 'choice', label: '选择题' },
@@ -156,9 +158,9 @@ export default function Home() {
                   <button
                     key={t.value}
                     onClick={() => setQuestionType(t.value)}
-                    className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 active:scale-95 ${
                       questionType === t.value
-                        ? 'bg-primary-600 text-white'
+                        ? 'bg-primary-600 text-white shadow-sm'
                         : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                     }`}
                   >
@@ -172,7 +174,7 @@ export default function Home() {
             <button
               onClick={handleStart}
               disabled={loading || !cat || cat.total_count === 0}
-              className="btn-primary w-full text-lg py-3"
+              className="btn-primary w-full text-base md:text-lg py-3"
             >
               🚀 开始刷题
             </button>
@@ -183,20 +185,20 @@ export default function Home() {
       {/* Quick Stats */}
       {categories.length > 0 && (
         <section>
-          <h2 className="text-lg font-semibold text-gray-700 mb-3">学习概览</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <h2 className="text-base md:text-lg font-semibold text-gray-700 mb-3">学习概览</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 md:gap-4">
             {categories.map((c) => {
               const meta = CATEGORY_META[c.category] || DEFAULT_META
               return (
                 <div key={c.category} className="card text-center">
-                  <span className="text-2xl">{meta.icon}</span>
-                  <div className="mt-2 font-bold text-gray-800">
+                  <span className="text-xl md:text-2xl">{meta.icon}</span>
+                  <div className="mt-2 font-bold text-gray-800 text-sm md:text-base">
                     {c.answered_count} / {c.total_count}
                   </div>
                   <div className="text-xs text-gray-400">已答 / 总题数</div>
                   <div className="mt-2 w-full bg-gray-100 rounded-full h-1.5">
                     <div
-                      className={`bg-gradient-to-r ${meta.color} h-1.5 rounded-full transition-all`}
+                      className={`bg-gradient-to-r ${meta.color} h-1.5 rounded-full transition-all duration-500`}
                       style={{
                         width: `${c.total_count > 0 ? (c.answered_count / c.total_count) * 100 : 0}%`,
                       }}

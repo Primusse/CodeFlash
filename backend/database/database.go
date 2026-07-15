@@ -28,7 +28,26 @@ func Init(dbPath string) error {
 		return err
 	}
 
-	return DB.AutoMigrate(&models.Question{}, &models.Progress{})
+	if err := DB.AutoMigrate(&models.Question{}, &models.Progress{}, &models.Note{}, &models.CategoryMeta{}); err != nil {
+		return err
+	}
+
+	// Seed default category metadata (only if table is empty)
+	var count int64
+	DB.Model(&models.CategoryMeta{}).Count(&count)
+	if count == 0 {
+		defaults := []models.CategoryMeta{
+			{Key: "java", Name: "Java 后端开发", Icon: "☕"},
+			{Key: "golang", Name: "Go 后端开发", Icon: "🐹"},
+			{Key: "agent", Name: "AI Agent 开发", Icon: "🤖"},
+			{Key: "docker", Name: "Docker 容器技术", Icon: "🐳"},
+		}
+		for _, m := range defaults {
+			DB.Create(&m)
+		}
+	}
+
+	return nil
 }
 
 func SeedQuestions(dataDir string) error {

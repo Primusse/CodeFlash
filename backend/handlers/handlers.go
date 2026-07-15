@@ -13,7 +13,8 @@ import (
 
 // categoryMeta maps category keys to display names and icons.
 // Unknown categories fall back to using the key as name with 📦 icon.
-var categoryMeta = map[string]struct {
+// These are fallback defaults; the database category_metas table takes precedence.
+var defaultCategoryMeta = map[string]struct {
 	Name string
 	Icon string
 }{
@@ -24,17 +25,37 @@ var categoryMeta = map[string]struct {
 }
 
 func getCategoryName(key string) string {
-	if m, ok := categoryMeta[key]; ok {
+	var m models.CategoryMeta
+	if err := database.DB.Where("key = ?", key).First(&m).Error; err == nil {
 		return m.Name
+	}
+	if d, ok := defaultCategoryMeta[key]; ok {
+		return d.Name
 	}
 	return key
 }
 
 func getCategoryIcon(key string) string {
-	if m, ok := categoryMeta[key]; ok {
+	var m models.CategoryMeta
+	if err := database.DB.Where("key = ?", key).First(&m).Error; err == nil {
 		return m.Icon
 	}
+	if d, ok := defaultCategoryMeta[key]; ok {
+		return d.Icon
+	}
 	return "📦"
+}
+
+// getCategoryMeta returns the full CategoryMeta for a key (from DB or defaults).
+func getCategoryMeta(key string) models.CategoryMeta {
+	var m models.CategoryMeta
+	if err := database.DB.Where("key = ?", key).First(&m).Error; err == nil {
+		return m
+	}
+	if d, ok := defaultCategoryMeta[key]; ok {
+		return models.CategoryMeta{Key: key, Name: d.Name, Icon: d.Icon}
+	}
+	return models.CategoryMeta{Key: key, Name: key, Icon: "📦"}
 }
 
 // getDistinctCategories returns all categories that have at least one question.
@@ -54,9 +75,11 @@ func GetCategories(c *gin.Context) {
 		database.DB.Model(&models.Progress{}).Where("category = ?", cat).Count(&answered)
 		database.DB.Model(&models.Progress{}).Where("category = ? AND correct = ?", cat, true).Count(&correct)
 
+		meta := getCategoryMeta(cat)
 		result = append(result, models.CategoryInfo{
 			Category:      cat,
-			Name:          getCategoryName(cat),
+			Name:          meta.Name,
+			Icon:          meta.Icon,
 			TotalCount:    total,
 			ChoiceCount:   choice,
 			FillCount:     fill,
@@ -423,6 +446,174 @@ func DeleteQuestion(c *gin.Context) {
 	database.DB.Where("question_id = ?", id).Delete(&models.Progress{})
 
 	c.JSON(http.StatusOK, gin.H{"message": "deleted", "id": id})
+}
+
+// ──────────────────────────────────────────────
+// Note handlers
+// ──────────────────────────────────────────────
+
+// ListNotes returns all notes ordered by updated_at desc.
+func ListNotes(c *gin.Context) {
+	var notes []models.Note
+	database.DB.Order("updated_at DESC").Find(&notes)
+	c.JSON(http.StatusOK, gin.H{"notes": notes})
+}
+
+// CreateNote creates a new note. ID is generated client-side.
+func CreateNote(c *gin.Context) {
+	var note models.Note
+	if err := c.ShouldBindJSON(&note); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid request"})
+		return
+	}
+	if note.ID == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "id is required"})
+		return
+	}
+	if err := database.DB.Create(&note).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusCreated, gin.H{"note": note})
+}
+
+// UpdateNote updates an existing note.
+func UpdateNote(c *gin.Context) {
+	id := c.Param("id")
+	var existing models.Note
+	if err := database.DB.Where("id = ?", id).First(&existing).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "note not found"})
+		return
+	}
+
+	var update models.Note
+	if err := c.ShouldBindJSON(&update); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid request"})
+		return
+	}
+
+	existing.Title = update.Title
+	existing.Tags = update.Tags
+	existing.Content = update.Content
+	existing.UpdatedAt = update.UpdatedAt
+
+	database.DB.Save(&existing)
+	c.JSON(http.StatusOK, gin.H{"note": existing})
+}
+
+// DeleteNote deletes a note by ID.
+func DeleteNote(c *gin.Context) {
+	id := c.Param("id")
+	result := database.DB.Where("id = ?", id).Delete(&models.Note{})
+	if result.RowsAffected == 0 {
+		c.JSON(http.StatusNotFound, gin.H{"error": "note not found"})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"message": "deleted", "id": id})
+}
+
+// UpdateQuestion updates a question's fields by ID.
+func UpdateQuestion(c *gin.Context) {
+	id := c.Param("id")
+	if id == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "id is required"})
+		return
+	}
+
+	var existing models.Question
+	if err := database.DB.Where("id = ?", id).First(&existing).Error; err != nil {
+		c.JSON(http.StatusNotFound, gin.H{"error": "question not found"})
+		return
+	}
+
+	var update models.QuestionUpdate
+	if err := c.ShouldBindJSON(&update); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid request"})
+		return
+	}
+
+	if update.Question != "" {
+		existing.Question = update.Question
+	}
+	if update.Subcategory != "" {
+		existing.Subcategory = update.Subcategory
+	}
+	if update.Difficulty != "" {
+		existing.Difficulty = update.Difficulty
+	}
+	if update.Type != "" {
+		existing.Type = update.Type
+	}
+	if update.Options != "" {
+		existing.Options = update.Options
+	}
+	if update.Answer != "" {
+		existing.Answer = update.Answer
+	}
+	if update.Explanation != "" {
+		existing.Explanation = update.Explanation
+	}
+	if update.Category != "" {
+		existing.Category = update.Category
+	}
+
+	database.DB.Save(&existing)
+	c.JSON(http.StatusOK, gin.H{"question": existing})
+}
+
+// ──────────────────────────────────────────────
+// Category metadata handlers
+// ──────────────────────────────────────────────
+
+// ListCategoryMetas returns all category metadata from the database.
+func ListCategoryMetas(c *gin.Context) {
+	var metas []models.CategoryMeta
+	database.DB.Order("key").Find(&metas)
+	c.JSON(http.StatusOK, gin.H{"category_metas": metas})
+}
+
+// UpdateCategoryMeta creates or updates category metadata (name + icon).
+func UpdateCategoryMeta(c *gin.Context) {
+	key := c.Param("key")
+	if key == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "key is required"})
+		return
+	}
+
+	var input models.CategoryMeta
+	if err := c.ShouldBindJSON(&input); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid request"})
+		return
+	}
+	input.Key = key
+
+	// Upsert: update if exists, create if not
+	var existing models.CategoryMeta
+	if err := database.DB.Where("key = ?", key).First(&existing).Error; err != nil {
+		// Create new
+		database.DB.Create(&input)
+	} else {
+		// Update existing
+		existing.Name = input.Name
+		existing.Icon = input.Icon
+		database.DB.Save(&existing)
+		input = existing
+	}
+
+	c.JSON(http.StatusOK, gin.H{"category_meta": input})
+}
+
+// ListIcons returns the list of available emoji icons for categories.
+func ListIcons(c *gin.Context) {
+	icons := []string{
+		"☕", "🐹", "🤖", "🐳", "🐍", "💻", "🎯", "🔧",
+		"⚙️", "🚀", "💡", "📦", "🗄️", "🌐", "🔒", "🛡️",
+		"📊", "🎨", "🧩", "🔬", "📱", "🖥️", "🗃️", "⚛️",
+		"🦀", "🐘", "🍃", "🔥", "☁️", "🏗️", "📝", "🧪",
+		"⭐", "🎮", "🧠", "💾", "🔗", "📡", "🛠️", "🌀",
+		"📋", "✅", "🎵", "🧰", "🪄", "🎪", "🔮", "💎",
+	}
+	c.JSON(http.StatusOK, gin.H{"icons": icons})
 }
 
 func init() {

@@ -1,10 +1,14 @@
 import { useState, useCallback } from 'react'
 import type {
   CategoryInfo,
+  CategoryMeta,
   SafeQuestion,
   QuizBatchResponse,
   StatsResponse,
   WrongQuestion,
+  Note,
+  QuestionUpdate,
+  Question,
 } from '../types'
 
 const BASE = '/api'
@@ -90,6 +94,76 @@ export function useApi() {
       return true
     })
 
+  const getNotes = () =>
+    call(async () => {
+      const data = await fetchJSON<{ notes: Note[] }>(`${BASE}/notes`)
+      return data.notes
+    })
+
+  const createNote = (note: Note) =>
+    call(async () => {
+      const data = await fetchJSON<{ note: Note }>(`${BASE}/notes`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(note),
+      })
+      return data.note
+    })
+
+  const updateNote = (id: string, note: Partial<Note>) =>
+    call(async () => {
+      const data = await fetchJSON<{ note: Note }>(`${BASE}/notes/${encodeURIComponent(id)}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(note),
+      })
+      return data.note
+    })
+
+  const deleteNote = (id: string) =>
+    call(async () => {
+      await fetchJSON(`${BASE}/notes/${encodeURIComponent(id)}`, { method: 'DELETE' })
+      return true
+    })
+
+  const updateQuestion = (id: string, update: QuestionUpdate) =>
+    call(async () => {
+      const data = await fetchJSON<{ question: Question }>(
+        `${BASE}/questions/${encodeURIComponent(id)}`,
+        {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(update),
+        }
+      )
+      return data.question
+    })
+
+  const getCategoryMetas = () =>
+    call(async () => {
+      const data = await fetchJSON<{ category_metas: CategoryMeta[] }>(`${BASE}/category-metas`)
+      return data.category_metas
+    })
+
+  const updateCategoryMeta = (key: string, meta: { name: string; icon: string }) =>
+    call(async () => {
+      const data = await fetchJSON<{ category_meta: CategoryMeta }>(
+        `${BASE}/category-metas/${encodeURIComponent(key)}`,
+        {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(meta),
+        }
+      )
+      return data.category_meta
+    })
+
+  const getIcons = () =>
+    call(async () => {
+      const data = await fetchJSON<{ icons: string[] }>(`${BASE}/icons`)
+      return data.icons
+    })
+
   return {
     loading,
     error,
@@ -100,5 +174,13 @@ export function useApi() {
     getStats,
     getWrongQuestions,
     resetProgress,
+    getNotes,
+    createNote,
+    updateNote,
+    deleteNote,
+    updateQuestion,
+    getCategoryMetas,
+    updateCategoryMeta,
+    getIcons,
   }
 }

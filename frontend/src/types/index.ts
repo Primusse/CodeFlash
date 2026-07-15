@@ -1,11 +1,29 @@
 export interface CategoryInfo {
   category: string
   name: string
+  icon: string
   total_count: number
   choice_count: number
   fill_count: number
   answered_count: number
   correct_count: number
+}
+
+export interface CategoryMeta {
+  key: string
+  name: string
+  icon: string
+}
+
+export interface QuestionUpdate {
+  question?: string
+  subcategory?: string
+  difficulty?: string
+  type?: string
+  options?: string
+  answer?: string
+  explanation?: string
+  category?: string
 }
 
 export interface SafeQuestion {
@@ -64,6 +82,15 @@ export interface Question {
   options: string
   answer: string
   explanation: string
+}
+
+export interface Note {
+  id: string
+  title: string
+  tags: string
+  content: string
+  created_at: number
+  updated_at: number
 }
 
 export interface WrongQuestion {

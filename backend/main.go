@@ -30,7 +30,7 @@ func main() {
 	// CORS for dev
 	r.Use(cors.New(cors.Config{
 		AllowOrigins:     []string{"*"},
-		AllowMethods:     []string{"GET", "POST", "DELETE", "OPTIONS"},
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Accept"},
 		AllowCredentials: true,
 	}))
@@ -47,8 +47,20 @@ func main() {
 		api.GET("/wrong-questions", handlers.GetWrongQuestions)
 		api.POST("/questions/import", handlers.ImportQuestions)
 		api.GET("/questions", handlers.ListQuestions)
+		api.PUT("/questions/:id", handlers.UpdateQuestion)
 		api.DELETE("/questions/:id", handlers.DeleteQuestion)
 		api.DELETE("/progress", handlers.ResetProgress)
+
+		// Category metadata
+		api.GET("/category-metas", handlers.ListCategoryMetas)
+		api.PUT("/category-metas/:key", handlers.UpdateCategoryMeta)
+		api.GET("/icons", handlers.ListIcons)
+
+		// Notes
+		api.GET("/notes", handlers.ListNotes)
+		api.POST("/notes", handlers.CreateNote)
+		api.PUT("/notes/:id", handlers.UpdateNote)
+		api.DELETE("/notes/:id", handlers.DeleteNote)
 	}
 
 	fmt.Printf("CodeFlash server starting on port %s...\n", cfg.Port)
