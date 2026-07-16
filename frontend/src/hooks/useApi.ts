@@ -1,31 +1,20 @@
 import { useState, useCallback } from 'react'
-import type {
-  CategoryInfo,
-  CategoryMeta,
-  SafeQuestion,
-  QuizBatchResponse,
-  StatsResponse,
-  WrongQuestion,
-  Note,
-  QuestionUpdate,
-  Question,
-} from '../types'
+import { getCategories } from '../api/categories'
+import { startQuiz, submitBatch } from '../api/quiz'
+import { getStats, getWrongQuestions, resetProgress } from '../api/stats'
+import { getNotes, createNote, updateNote, deleteNote } from '../api/notes'
+import { updateQuestion, getCategoryMetas, updateCategoryMeta, getIcons } from '../api/questions'
+import type { QuestionUpdate } from '../types'
 
-const BASE = '/api'
-
-async function fetchJSON<T>(url: string, options?: RequestInit): Promise<T> {
-  const res = await fetch(url, options)
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({ error: 'Network error' }))
-    throw new Error(err.error || `HTTP ${res.status}`)
-  }
-  return res.json()
-}
-
+/**
+ * useApi - 统一管理 API 调用的 loading 和 error 状态
+ * 具体 API 实现位于 src/api/ 目录，按领域拆分
+ */
 export function useApi() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
+  /** 包装异步函数，自动管理 loading/error 状态 */
   const call = useCallback(async <T>(fn: () => Promise<T>): Promise<T | null> => {
     setLoading(true)
     setError(null)
@@ -40,147 +29,66 @@ export function useApi() {
     }
   }, [])
 
-  const getCategories = () =>
-    call(async () => {
-      const data = await fetchJSON<{ categories: CategoryInfo[] }>(`${BASE}/categories`)
-      return data.categories
-    })
+  // ── Categories ──
+  const apiGetCategories = () => call(() => getCategories())
 
-  const startQuiz = (category: string, count: number, type: string) =>
-    call(async () => {
-      const data = await fetchJSON<{ questions: SafeQuestion[]; total: number }>(
-        `${BASE}/quiz/start`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ category, count, type }),
-        }
-      )
-      return data
-    })
+  // ── Quiz ──
+  const apiStartQuiz = (category: string, count: number, type: string) =>
+    call(() => startQuiz({ category, count, type }))
 
-  const submitBatch = (answers: { question_id: string; answer: string }[]) =>
-    call(async () => {
-      const data = await fetchJSON<QuizBatchResponse>(
-        `${BASE}/quiz/submit-batch`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ answers }),
-        }
-      )
-      return data
-    })
+  const apiSubmitBatch = (answers: { question_id: string; answer: string }[]) =>
+    call(() => submitBatch(answers))
 
-  const getStats = () =>
-    call(async () => {
-      const data = await fetchJSON<StatsResponse>(`${BASE}/stats`)
-      return data
-    })
+  // ── Stats / Progress / Wrong Questions ──
+  const apiGetStats = () => call(() => getStats())
 
-  const getWrongQuestions = (category?: string) =>
-    call(async () => {
-      const params = category ? `?category=${category}` : ''
-      const data = await fetchJSON<{ questions: WrongQuestion[] }>(
-        `${BASE}/wrong-questions${params}`
-      )
-      return data.questions
-    })
+  const apiGetWrongQuestions = (category?: string) =>
+    call(() => getWrongQuestions(category))
 
-  const resetProgress = (category?: string) =>
-    call(async () => {
-      const params = category ? `?category=${category}` : ''
-      await fetchJSON(`${BASE}/progress${params}`, { method: 'DELETE' })
-      return true
-    })
+  const apiResetProgress = (category?: string) =>
+    call(() => resetProgress(category))
 
-  const getNotes = () =>
-    call(async () => {
-      const data = await fetchJSON<{ notes: Note[] }>(`${BASE}/notes`)
-      return data.notes
-    })
+  // ── Notes ──
+  const apiGetNotes = () => call(() => getNotes())
 
-  const createNote = (note: Note) =>
-    call(async () => {
-      const data = await fetchJSON<{ note: Note }>(`${BASE}/notes`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(note),
-      })
-      return data.note
-    })
+  const apiCreateNote = (note: Parameters<typeof createNote>[0]) =>
+    call(() => createNote(note))
 
-  const updateNote = (id: string, note: Partial<Note>) =>
-    call(async () => {
-      const data = await fetchJSON<{ note: Note }>(`${BASE}/notes/${encodeURIComponent(id)}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(note),
-      })
-      return data.note
-    })
+  const apiUpdateNote = (id: string, note: Parameters<typeof updateNote>[1]) =>
+    call(() => updateNote(id, note))
 
-  const deleteNote = (id: string) =>
-    call(async () => {
-      await fetchJSON(`${BASE}/notes/${encodeURIComponent(id)}`, { method: 'DELETE' })
-      return true
-    })
+  const apiDeleteNote = (id: string) => call(() => deleteNote(id))
 
-  const updateQuestion = (id: string, update: QuestionUpdate) =>
-    call(async () => {
-      const data = await fetchJSON<{ question: Question }>(
-        `${BASE}/questions/${encodeURIComponent(id)}`,
-        {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(update),
-        }
-      )
-      return data.question
-    })
+  // ── Question Management ──
+  const apiUpdateQuestion = (id: string, update: QuestionUpdate) =>
+    call(() => updateQuestion(id, update))
 
-  const getCategoryMetas = () =>
-    call(async () => {
-      const data = await fetchJSON<{ category_metas: CategoryMeta[] }>(`${BASE}/category-metas`)
-      return data.category_metas
-    })
+  // ── Category Meta ──
+  const apiGetCategoryMetas = () => call(() => getCategoryMetas())
 
-  const updateCategoryMeta = (key: string, meta: { name: string; icon: string }) =>
-    call(async () => {
-      const data = await fetchJSON<{ category_meta: CategoryMeta }>(
-        `${BASE}/category-metas/${encodeURIComponent(key)}`,
-        {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(meta),
-        }
-      )
-      return data.category_meta
-    })
+  const apiUpdateCategoryMeta = (key: string, meta: { name: string; icon: string }) =>
+    call(() => updateCategoryMeta(key, meta))
 
-  const getIcons = () =>
-    call(async () => {
-      const data = await fetchJSON<{ icons: string[] }>(`${BASE}/icons`)
-      return data.icons
-    })
+  const apiGetIcons = () => call(() => getIcons())
 
   return {
     loading,
     error,
     setError,
-    getCategories,
-    startQuiz,
-    submitBatch,
-    getStats,
-    getWrongQuestions,
-    resetProgress,
-    getNotes,
-    createNote,
-    updateNote,
-    deleteNote,
-    updateQuestion,
-    getCategoryMetas,
-    updateCategoryMeta,
-    getIcons,
+    // 保持与旧版一致的方法名
+    getCategories: apiGetCategories,
+    startQuiz: apiStartQuiz,
+    submitBatch: apiSubmitBatch,
+    getStats: apiGetStats,
+    getWrongQuestions: apiGetWrongQuestions,
+    resetProgress: apiResetProgress,
+    getNotes: apiGetNotes,
+    createNote: apiCreateNote,
+    updateNote: apiUpdateNote,
+    deleteNote: apiDeleteNote,
+    updateQuestion: apiUpdateQuestion,
+    getCategoryMetas: apiGetCategoryMetas,
+    updateCategoryMeta: apiUpdateCategoryMeta,
+    getIcons: apiGetIcons,
   }
 }

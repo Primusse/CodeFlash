@@ -21,3 +21,6 @@ backend/data/codeflash.db
 #docs
 /help.md
 /docker-compose.prod.yml
+
+#exe
+.exe
